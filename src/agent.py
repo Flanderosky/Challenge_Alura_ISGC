@@ -24,7 +24,7 @@ def get_llm(provider: Optional[str] = None):
         api_key = os.getenv("GOOGLE_API_KEY")
         if not api_key:
             raise ValueError("Falta GOOGLE_API_KEY en las variables de entorno.")
-        model = os.getenv("GOOGLE_MODEL", "gemini-1.5-flash")
+        model = os.getenv("GOOGLE_MODEL", "gemini-1.5-flash-latest")
         return ChatGoogleGenerativeAI(google_api_key=api_key, model=model, temperature=0.3)
 
     elif provider == "cohere":
