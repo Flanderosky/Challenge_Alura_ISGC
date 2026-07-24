@@ -1,0 +1,421 @@
+fecha,pedido,categoria,producto,region,canal,envio,unidades,importe,dias_entrega
+2026-01-02,MER-100074,Electrónica,Laptop Meridia Pro 14,Yucatán,App móvil,Exprés,2,49980,2
+2026-01-04,MER-100266,Electrónica,Teclado mecánico retroiluminado,Nuevo León,Marketplace,Estándar,1,1890,5
+2026-01-05,MER-100157,Hogar,Lámpara de escritorio LED,Nuevo León,Web,Estándar,2,1780,5
+2026-01-05,MER-100277,Hogar,Silla ergonómica de oficina,Nuevo León,Web,Estándar,2,10980,6
+2026-01-06,MER-100075,Hogar,Silla ergonómica de oficina,Baja California,App móvil,Estándar,1,5490,5
+2026-01-06,MER-100378,Hogar,Lámpara de escritorio LED,Ciudad de México,App móvil,Estándar,1,890,3
+2026-01-11,MER-100102,Ropa,Chamarra ligera impermeable,Jalisco,App móvil,Estándar,1,1690,3
+2026-01-15,MER-100359,Electrónica,Monitor curvo 27 pulgadas,Jalisco,App móvil,Estándar,1,6490,3
+2026-01-18,MER-100086,Accesorios,Mochila para laptop impermeable,Baja California,App móvil,Estándar,1,1290,5
+2026-01-19,MER-100409,Electrónica,Monitor curvo 27 pulgadas,Puebla,Marketplace,Exprés,3,19470,2
+2026-01-22,MER-100184,Electrónica,Laptop Meridia Pro 14,Baja California,App móvil,Mismo día,1,24990,0
+2026-01-23,MER-100148,Electrónica,Monitor curvo 27 pulgadas,Jalisco,Web,Estándar,3,19470,6
+2026-01-23,MER-100375,Electrónica,Laptop Meridia Pro 14,Ciudad de México,Marketplace,Exprés,2,49980,1
+2026-01-25,MER-100321,Accesorios,Funda protectora para laptop,Puebla,Marketplace,Estándar,1,490,5
+2026-01-26,MER-100041,Accesorios,Cargador USB-C de 65 W,Ciudad de México,App móvil,Estándar,1,790,5
+2026-01-28,MER-100022,Ropa,Sudadera con capucha,Nuevo León,App móvil,Estándar,2,1798,4
+2026-01-28,MER-100211,Electrónica,Audífonos con cancelación de ruido,Nuevo León,Web,Exprés,1,3990,1
+2026-01-28,MER-100408,Electrónica,Audífonos con cancelación de ruido,Puebla,Marketplace,Estándar,2,7980,4
+2026-01-29,MER-100367,Electrónica,Audífonos con cancelación de ruido,Yucatán,Web,Estándar,2,7980,5
+2026-01-30,MER-100067,Hogar,Silla ergonómica de oficina,Baja California,Web,Exprés,2,10980,1
+2026-01-30,MER-100223,Accesorios,Funda protectora para laptop,Ciudad de México,Web,Estándar,2,980,3
+2026-02-01,MER-100225,Electrónica,Monitor curvo 27 pulgadas,Yucatán,Web,Exprés,2,12980,1
+2026-02-01,MER-100228,Electrónica,Audífonos con cancelación de ruido,Nuevo León,Marketplace,Exprés,1,3990,1
+2026-02-01,MER-100284,Ropa,Chamarra ligera impermeable,Baja California,Marketplace,Estándar,2,3380,4
+2026-02-02,MER-100189,Accesorios,Funda protectora para laptop,Puebla,Marketplace,Mismo día,3,1470,0
+2026-02-02,MER-100293,Electrónica,Audífonos con cancelación de ruido,Puebla,Web,Estándar,3,11970,5
+2026-02-02,MER-100349,Hogar,Silla ergonómica de oficina,Jalisco,Marketplace,Estándar,2,10980,3
+2026-02-03,MER-100296,Ropa,Chamarra ligera impermeable,Nuevo León,Web,Estándar,2,3380,3
+2026-02-05,MER-100093,Hogar,Lámpara de escritorio LED,Nuevo León,App móvil,Estándar,1,890,3
+2026-02-08,MER-100110,Electrónica,Teclado mecánico retroiluminado,Yucatán,Web,Exprés,1,1890,1
+2026-02-11,MER-100012,Hogar,Escritorio elevable,Nuevo León,Marketplace,Exprés,1,8990,2
+2026-02-11,MER-100315,Accesorios,Funda protectora para laptop,Ciudad de México,Marketplace,Exprés,1,490,1
+2026-02-11,MER-100335,Ropa,Camiseta de algodón orgánico,Yucatán,Marketplace,Exprés,3,1197,2
+2026-02-12,MER-100200,Hogar,Lámpara de escritorio LED,Jalisco,Web,Estándar,1,890,4
+2026-02-13,MER-100373,Hogar,Lámpara de escritorio LED,Puebla,Web,Estándar,2,1780,6
+2026-02-14,MER-100269,Hogar,Cafetera de goteo programable,Jalisco,Marketplace,Exprés,1,1490,1
+2026-02-15,MER-100020,Accesorios,Funda protectora para laptop,Nuevo León,App móvil,Estándar,2,980,3
+2026-02-15,MER-100119,Electrónica,Teclado mecánico retroiluminado,Jalisco,Web,Estándar,1,1890,5
+2026-02-15,MER-100398,Electrónica,Teclado mecánico retroiluminado,Puebla,Web,Estándar,1,1890,3
+2026-02-16,MER-100297,Hogar,Escritorio elevable,Jalisco,App móvil,Estándar,2,17980,6
+2026-02-16,MER-100353,Hogar,Cafetera de goteo programable,Jalisco,App móvil,Exprés,1,1490,2
+2026-02-17,MER-100158,Ropa,Chamarra ligera impermeable,Yucatán,Web,Estándar,1,1690,3
+2026-02-17,MER-100279,Ropa,Camiseta de algodón orgánico,Ciudad de México,App móvil,Estándar,2,798,5
+2026-02-17,MER-100311,Ropa,Chamarra ligera impermeable,Puebla,Web,Estándar,1,1690,4
+2026-02-19,MER-100007,Accesorios,Mochila para laptop impermeable,Ciudad de México,Marketplace,Estándar,2,2580,5
+2026-02-19,MER-100372,Ropa,Sudadera con capucha,Baja California,Web,Exprés,2,1798,1
+2026-02-19,MER-100406,Electrónica,Laptop Meridia Pro 14,Nuevo León,App móvil,Estándar,1,24990,5
+2026-02-20,MER-100127,Accesorios,Funda protectora para laptop,Yucatán,App móvil,Exprés,2,980,2
+2026-02-20,MER-100310,Hogar,Silla ergonómica de oficina,Yucatán,App móvil,Exprés,2,10980,1
+2026-02-20,MER-100313,Ropa,Camiseta de algodón orgánico,Jalisco,Web,Estándar,1,399,5
+2026-02-21,MER-100253,Hogar,Silla ergonómica de oficina,Baja California,Web,Estándar,2,10980,4
+2026-02-21,MER-100376,Accesorios,Funda protectora para laptop,Puebla,App móvil,Estándar,1,490,5
+2026-02-21,MER-100381,Ropa,Sudadera con capucha,Puebla,Marketplace,Exprés,2,1798,1
+2026-02-21,MER-100411,Ropa,Camiseta de algodón orgánico,Yucatán,Marketplace,Estándar,3,1197,3
+2026-02-23,MER-100212,Ropa,Chamarra ligera impermeable,Nuevo León,App móvil,Exprés,2,3380,1
+2026-02-24,MER-100287,Ropa,Chamarra ligera impermeable,Nuevo León,Marketplace,Estándar,1,1690,3
+2026-02-25,MER-100092,Electrónica,Teclado mecánico retroiluminado,Ciudad de México,Web,Estándar,2,3780,5
+2026-02-25,MER-100393,Electrónica,Monitor curvo 27 pulgadas,Puebla,App móvil,Estándar,2,12980,4
+2026-02-27,MER-100143,Accesorios,Mochila para laptop impermeable,Puebla,Web,Estándar,1,1290,3
+2026-02-27,MER-100176,Ropa,Chamarra ligera impermeable,Yucatán,App móvil,Estándar,1,1690,4
+2026-02-28,MER-100040,Accesorios,Funda protectora para laptop,Yucatán,App móvil,Exprés,1,490,1
+2026-02-28,MER-100314,Hogar,Silla ergonómica de oficina,Ciudad de México,Marketplace,Estándar,2,10980,6
+2026-03-02,MER-100147,Accesorios,Funda protectora para laptop,Puebla,Marketplace,Estándar,2,980,3
+2026-03-03,MER-100107,Ropa,Chamarra ligera impermeable,Nuevo León,Web,Estándar,2,3380,3
+2026-03-03,MER-100251,Electrónica,Teclado mecánico retroiluminado,Yucatán,Web,Estándar,3,5670,4
+2026-03-05,MER-100011,Electrónica,Laptop Meridia Pro 14,Ciudad de México,Marketplace,Estándar,2,49980,6
+2026-03-06,MER-100097,Ropa,Sudadera con capucha,Puebla,App móvil,Exprés,2,1798,2
+2026-03-06,MER-100286,Electrónica,Monitor curvo 27 pulgadas,Puebla,Web,Estándar,3,19470,4
+2026-03-06,MER-100303,Electrónica,Teclado mecánico retroiluminado,Nuevo León,Marketplace,Estándar,2,3780,6
+2026-03-07,MER-100058,Ropa,Sudadera con capucha,Ciudad de México,App móvil,Estándar,1,899,5
+2026-03-08,MER-100088,Ropa,Camiseta de algodón orgánico,Baja California,Web,Estándar,2,798,6
+2026-03-08,MER-100360,Ropa,Chamarra ligera impermeable,Ciudad de México,Marketplace,Estándar,2,3380,3
+2026-03-09,MER-100090,Accesorios,Cargador USB-C de 65 W,Jalisco,Marketplace,Estándar,1,790,3
+2026-03-09,MER-100214,Hogar,Cafetera de goteo programable,Ciudad de México,Marketplace,Estándar,1,1490,4
+2026-03-10,MER-100144,Hogar,Silla ergonómica de oficina,Jalisco,App móvil,Estándar,1,5490,4
+2026-03-10,MER-100236,Hogar,Escritorio elevable,Nuevo León,Web,Mismo día,1,8990,0
+2026-03-10,MER-100346,Accesorios,Cargador USB-C de 65 W,Baja California,App móvil,Estándar,3,2370,4
+2026-03-11,MER-100243,Hogar,Lámpara de escritorio LED,Baja California,Marketplace,Exprés,1,890,1
+2026-03-12,MER-100338,Electrónica,Audífonos con cancelación de ruido,Jalisco,Web,Mismo día,2,7980,0
+2026-03-13,MER-100178,Hogar,Cafetera de goteo programable,Ciudad de México,App móvil,Estándar,1,1490,6
+2026-03-13,MER-100273,Accesorios,Cargador USB-C de 65 W,Baja California,Web,Estándar,1,790,4
+2026-03-14,MER-100049,Hogar,Cafetera de goteo programable,Yucatán,Web,Estándar,1,1490,5
+2026-03-16,MER-100185,Ropa,Chamarra ligera impermeable,Ciudad de México,Web,Estándar,3,5070,5
+2026-03-16,MER-100186,Accesorios,Mochila para laptop impermeable,Nuevo León,Web,Estándar,2,2580,6
+2026-03-16,MER-100415,Hogar,Silla ergonómica de oficina,Baja California,App móvil,Exprés,1,5490,1
+2026-03-17,MER-100060,Hogar,Silla ergonómica de oficina,Ciudad de México,Marketplace,Exprés,1,5490,2
+2026-03-17,MER-100239,Electrónica,Teclado mecánico retroiluminado,Yucatán,Marketplace,Estándar,2,3780,4
+2026-03-17,MER-100268,Ropa,Camiseta de algodón orgánico,Puebla,Marketplace,Estándar,3,1197,4
+2026-03-18,MER-100350,Hogar,Cafetera de goteo programable,Ciudad de México,Marketplace,Estándar,1,1490,6
+2026-03-19,MER-100129,Electrónica,Audífonos con cancelación de ruido,Baja California,Web,Estándar,1,3990,3
+2026-03-19,MER-100319,Electrónica,Audífonos con cancelación de ruido,Yucatán,Web,Mismo día,2,7980,0
+2026-03-20,MER-100171,Electrónica,Monitor curvo 27 pulgadas,Puebla,Web,Mismo día,2,12980,0
+2026-03-21,MER-100014,Ropa,Sudadera con capucha,Puebla,App móvil,Estándar,1,899,3
+2026-03-21,MER-100388,Electrónica,Audífonos con cancelación de ruido,Yucatán,App móvil,Estándar,1,3990,5
+2026-03-23,MER-100152,Accesorios,Mochila para laptop impermeable,Jalisco,App móvil,Estándar,2,2580,6
+2026-03-23,MER-100275,Accesorios,Mochila para laptop impermeable,Jalisco,Web,Estándar,3,3870,6
+2026-03-23,MER-100333,Hogar,Escritorio elevable,Nuevo León,Marketplace,Estándar,1,8990,5
+2026-03-24,MER-100337,Hogar,Silla ergonómica de oficina,Jalisco,App móvil,Exprés,1,5490,1
+2026-03-25,MER-100101,Accesorios,Cargador USB-C de 65 W,Nuevo León,Marketplace,Estándar,1,790,4
+2026-03-26,MER-100276,Hogar,Escritorio elevable,Nuevo León,Web,Estándar,2,17980,6
+2026-03-27,MER-100031,Electrónica,Teclado mecánico retroiluminado,Puebla,App móvil,Exprés,1,1890,1
+2026-03-30,MER-100193,Hogar,Cafetera de goteo programable,Nuevo León,App móvil,Estándar,2,2980,3
+2026-03-31,MER-100207,Accesorios,Cargador USB-C de 65 W,Jalisco,Marketplace,Exprés,1,790,1
+2026-03-31,MER-100342,Ropa,Chamarra ligera impermeable,Yucatán,Marketplace,Estándar,1,1690,6
+2026-04-01,MER-100130,Hogar,Lámpara de escritorio LED,Baja California,Marketplace,Estándar,2,1780,6
+2026-04-03,MER-100021,Hogar,Cafetera de goteo programable,Yucatán,Web,Exprés,2,2980,2
+2026-04-03,MER-100166,Electrónica,Teclado mecánico retroiluminado,Baja California,Marketplace,Estándar,1,1890,6
+2026-04-04,MER-100142,Hogar,Cafetera de goteo programable,Nuevo León,Marketplace,Estándar,1,1490,6
+2026-04-04,MER-100206,Ropa,Chamarra ligera impermeable,Puebla,App móvil,Estándar,1,1690,5
+2026-04-04,MER-100210,Hogar,Escritorio elevable,Ciudad de México,Marketplace,Estándar,2,17980,4
+2026-04-06,MER-100000,Hogar,Cafetera de goteo programable,Yucatán,Marketplace,Estándar,3,4470,6
+2026-04-08,MER-100300,Accesorios,Mochila para laptop impermeable,Yucatán,App móvil,Estándar,1,1290,6
+2026-04-09,MER-100262,Ropa,Chamarra ligera impermeable,Yucatán,App móvil,Exprés,1,1690,2
+2026-04-10,MER-100118,Ropa,Sudadera con capucha,Nuevo León,Web,Estándar,2,1798,3
+2026-04-11,MER-100192,Ropa,Sudadera con capucha,Puebla,App móvil,Estándar,2,1798,3
+2026-04-12,MER-100224,Hogar,Lámpara de escritorio LED,Ciudad de México,Marketplace,Estándar,1,890,5
+2026-04-15,MER-100327,Electrónica,Teclado mecánico retroiluminado,Nuevo León,Marketplace,Exprés,1,1890,2
+2026-04-16,MER-100042,Hogar,Silla ergonómica de oficina,Puebla,Web,Mismo día,3,16470,0
+2026-04-17,MER-100187,Electrónica,Monitor curvo 27 pulgadas,Nuevo León,Web,Exprés,1,6490,1
+2026-04-18,MER-100128,Hogar,Silla ergonómica de oficina,Baja California,Web,Estándar,1,5490,5
+2026-04-19,MER-100169,Electrónica,Laptop Meridia Pro 14,Yucatán,Marketplace,Estándar,1,24990,3
+2026-04-20,MER-100232,Hogar,Escritorio elevable,Puebla,Marketplace,Estándar,3,26970,5
+2026-04-20,MER-100250,Hogar,Lámpara de escritorio LED,Yucatán,Web,Estándar,2,1780,6
+2026-04-21,MER-100174,Hogar,Escritorio elevable,Jalisco,Marketplace,Exprés,1,8990,1
+2026-04-21,MER-100399,Accesorios,Mochila para laptop impermeable,Ciudad de México,Web,Estándar,3,3870,3
+2026-04-22,MER-100351,Electrónica,Monitor curvo 27 pulgadas,Ciudad de México,Marketplace,Exprés,3,19470,2
+2026-04-23,MER-100047,Electrónica,Laptop Meridia Pro 14,Puebla,Web,Exprés,1,24990,2
+2026-04-23,MER-100106,Electrónica,Laptop Meridia Pro 14,Nuevo León,Web,Exprés,1,24990,2
+2026-04-24,MER-100254,Hogar,Cafetera de goteo programable,Jalisco,Marketplace,Estándar,1,1490,3
+2026-04-25,MER-100035,Ropa,Camiseta de algodón orgánico,Baja California,App móvil,Exprés,2,798,1
+2026-04-25,MER-100197,Ropa,Camiseta de algodón orgánico,Ciudad de México,App móvil,Exprés,1,399,2
+2026-04-26,MER-100002,Ropa,Camiseta de algodón orgánico,Jalisco,App móvil,Estándar,3,1197,5
+2026-04-26,MER-100104,Accesorios,Funda protectora para laptop,Ciudad de México,Web,Exprés,1,490,2
+2026-04-26,MER-100165,Accesorios,Mochila para laptop impermeable,Ciudad de México,App móvil,Estándar,2,2580,5
+2026-04-29,MER-100377,Ropa,Camiseta de algodón orgánico,Yucatán,Web,Estándar,1,399,4
+2026-04-29,MER-100387,Accesorios,Funda protectora para laptop,Puebla,Web,Estándar,2,980,4
+2026-04-30,MER-100255,Hogar,Escritorio elevable,Yucatán,Marketplace,Estándar,2,17980,3
+2026-05-02,MER-100026,Electrónica,Laptop Meridia Pro 14,Puebla,Marketplace,Estándar,1,24990,5
+2026-05-02,MER-100098,Accesorios,Cargador USB-C de 65 W,Nuevo León,Marketplace,Estándar,1,790,3
+2026-05-02,MER-100260,Ropa,Camiseta de algodón orgánico,Baja California,Web,Estándar,1,399,5
+2026-05-02,MER-100301,Ropa,Chamarra ligera impermeable,Jalisco,App móvil,Mismo día,2,3380,0
+2026-05-02,MER-100401,Electrónica,Monitor curvo 27 pulgadas,Baja California,Marketplace,Estándar,2,12980,3
+2026-05-03,MER-100249,Electrónica,Laptop Meridia Pro 14,Ciudad de México,Web,Estándar,2,49980,6
+2026-05-03,MER-100257,Hogar,Escritorio elevable,Ciudad de México,App móvil,Mismo día,1,8990,0
+2026-05-03,MER-100339,Ropa,Sudadera con capucha,Ciudad de México,Web,Estándar,2,1798,5
+2026-05-04,MER-100343,Accesorios,Mochila para laptop impermeable,Baja California,Marketplace,Estándar,1,1290,5
+2026-05-04,MER-100371,Electrónica,Teclado mecánico retroiluminado,Jalisco,App móvil,Estándar,2,3780,3
+2026-05-05,MER-100340,Accesorios,Funda protectora para laptop,Baja California,Web,Estándar,2,980,6
+2026-05-06,MER-100385,Hogar,Silla ergonómica de oficina,Jalisco,Marketplace,Estándar,1,5490,3
+2026-05-07,MER-100023,Hogar,Cafetera de goteo programable,Jalisco,Web,Exprés,1,1490,2
+2026-05-08,MER-100043,Accesorios,Mochila para laptop impermeable,Nuevo León,App móvil,Estándar,1,1290,3
+2026-05-08,MER-100322,Accesorios,Mochila para laptop impermeable,Puebla,App móvil,Estándar,1,1290,4
+2026-05-08,MER-100345,Electrónica,Audífonos con cancelación de ruido,Puebla,Marketplace,Estándar,2,7980,6
+2026-05-09,MER-100245,Hogar,Cafetera de goteo programable,Jalisco,Marketplace,Exprés,2,2980,1
+2026-05-10,MER-100226,Ropa,Sudadera con capucha,Jalisco,App móvil,Exprés,2,1798,2
+2026-05-11,MER-100215,Hogar,Lámpara de escritorio LED,Jalisco,Marketplace,Estándar,2,1780,6
+2026-05-12,MER-100177,Hogar,Lámpara de escritorio LED,Nuevo León,Marketplace,Exprés,2,1780,2
+2026-05-14,MER-100117,Accesorios,Funda protectora para laptop,Ciudad de México,Web,Estándar,2,980,3
+2026-05-14,MER-100164,Electrónica,Audífonos con cancelación de ruido,Nuevo León,Marketplace,Estándar,1,3990,6
+2026-05-14,MER-100362,Electrónica,Monitor curvo 27 pulgadas,Jalisco,Marketplace,Estándar,2,12980,3
+2026-05-14,MER-100386,Hogar,Cafetera de goteo programable,Ciudad de México,App móvil,Estándar,1,1490,5
+2026-05-15,MER-100018,Hogar,Lámpara de escritorio LED,Puebla,Web,Exprés,2,1780,1
+2026-05-15,MER-100134,Electrónica,Laptop Meridia Pro 14,Baja California,Marketplace,Estándar,2,49980,3
+2026-05-16,MER-100089,Ropa,Sudadera con capucha,Jalisco,App móvil,Estándar,1,899,3
+2026-05-16,MER-100354,Electrónica,Monitor curvo 27 pulgadas,Nuevo León,App móvil,Estándar,2,12980,3
+2026-05-16,MER-100363,Ropa,Chamarra ligera impermeable,Jalisco,Web,Exprés,2,3380,2
+2026-05-17,MER-100003,Hogar,Silla ergonómica de oficina,Jalisco,App móvil,Estándar,2,10980,3
+2026-05-19,MER-100050,Electrónica,Monitor curvo 27 pulgadas,Puebla,Web,Estándar,1,6490,6
+2026-05-20,MER-100222,Ropa,Chamarra ligera impermeable,Baja California,App móvil,Estándar,1,1690,5
+2026-05-20,MER-100316,Electrónica,Monitor curvo 27 pulgadas,Puebla,App móvil,Exprés,1,6490,1
+2026-05-21,MER-100139,Ropa,Sudadera con capucha,Nuevo León,Marketplace,Estándar,1,899,4
+2026-05-22,MER-100112,Hogar,Cafetera de goteo programable,Puebla,App móvil,Estándar,1,1490,5
+2026-05-23,MER-100317,Hogar,Lámpara de escritorio LED,Baja California,App móvil,Estándar,2,1780,5
+2026-05-24,MER-100044,Hogar,Lámpara de escritorio LED,Yucatán,Marketplace,Estándar,3,2670,5
+2026-05-25,MER-100264,Electrónica,Teclado mecánico retroiluminado,Nuevo León,App móvil,Estándar,1,1890,6
+2026-05-25,MER-100391,Hogar,Lámpara de escritorio LED,Jalisco,App móvil,Estándar,2,1780,5
+2026-05-25,MER-100416,Electrónica,Monitor curvo 27 pulgadas,Baja California,Web,Estándar,1,6490,3
+2026-05-30,MER-100403,Hogar,Cafetera de goteo programable,Baja California,App móvil,Estándar,1,1490,5
+2026-05-31,MER-100261,Accesorios,Cargador USB-C de 65 W,Jalisco,Web,Exprés,1,790,1
+2026-06-01,MER-100288,Hogar,Escritorio elevable,Nuevo León,Marketplace,Exprés,1,8990,2
+2026-06-02,MER-100087,Ropa,Chamarra ligera impermeable,Ciudad de México,Marketplace,Exprés,2,3380,1
+2026-06-02,MER-100120,Hogar,Lámpara de escritorio LED,Nuevo León,Web,Exprés,3,2670,1
+2026-06-02,MER-100145,Electrónica,Audífonos con cancelación de ruido,Nuevo León,Marketplace,Exprés,3,11970,1
+2026-06-02,MER-100227,Electrónica,Teclado mecánico retroiluminado,Nuevo León,App móvil,Exprés,1,1890,2
+2026-06-02,MER-100305,Hogar,Lámpara de escritorio LED,Baja California,Marketplace,Exprés,2,1780,1
+2026-06-03,MER-100135,Electrónica,Monitor curvo 27 pulgadas,Nuevo León,App móvil,Estándar,1,6490,3
+2026-06-03,MER-100244,Electrónica,Teclado mecánico retroiluminado,Baja California,Web,Estándar,1,1890,5
+2026-06-05,MER-100079,Accesorios,Mochila para laptop impermeable,Yucatán,Web,Estándar,1,1290,6
+2026-06-05,MER-100384,Hogar,Cafetera de goteo programable,Baja California,App móvil,Estándar,3,4470,4
+2026-06-09,MER-100181,Hogar,Escritorio elevable,Puebla,Marketplace,Exprés,1,8990,1
+2026-06-10,MER-100045,Ropa,Sudadera con capucha,Puebla,App móvil,Estándar,2,1798,5
+2026-06-10,MER-100048,Ropa,Chamarra ligera impermeable,Yucatán,App móvil,Exprés,3,5070,2
+2026-06-11,MER-100414,Electrónica,Teclado mecánico retroiluminado,Ciudad de México,App móvil,Estándar,1,1890,6
+2026-06-12,MER-100270,Hogar,Cafetera de goteo programable,Ciudad de México,Marketplace,Exprés,1,1490,2
+2026-06-13,MER-100280,Hogar,Lámpara de escritorio LED,Jalisco,App móvil,Estándar,2,1780,4
+2026-06-14,MER-100170,Accesorios,Mochila para laptop impermeable,Nuevo León,Web,Exprés,2,2580,1
+2026-06-17,MER-100013,Hogar,Escritorio elevable,Puebla,Marketplace,Estándar,2,17980,4
+2026-06-17,MER-100071,Ropa,Chamarra ligera impermeable,Yucatán,App móvil,Estándar,3,5070,5
+2026-06-18,MER-100024,Electrónica,Teclado mecánico retroiluminado,Yucatán,Web,Estándar,2,3780,5
+2026-06-18,MER-100389,Accesorios,Cargador USB-C de 65 W,Yucatán,Web,Estándar,1,790,4
+2026-06-19,MER-100308,Hogar,Escritorio elevable,Jalisco,Marketplace,Mismo día,2,17980,0
+2026-06-20,MER-100149,Electrónica,Audífonos con cancelación de ruido,Baja California,Web,Estándar,3,11970,6
+2026-06-22,MER-100055,Accesorios,Funda protectora para laptop,Baja California,Marketplace,Estándar,1,490,3
+2026-06-22,MER-100344,Ropa,Sudadera con capucha,Ciudad de México,App móvil,Estándar,2,1798,6
+2026-06-23,MER-100263,Ropa,Camiseta de algodón orgánico,Baja California,App móvil,Exprés,1,399,2
+2026-06-24,MER-100029,Electrónica,Teclado mecánico retroiluminado,Yucatán,Web,Estándar,2,3780,3
+2026-06-24,MER-100051,Hogar,Escritorio elevable,Baja California,App móvil,Estándar,3,26970,5
+2026-06-24,MER-100059,Hogar,Escritorio elevable,Jalisco,App móvil,Estándar,1,8990,6
+2026-06-24,MER-100282,Electrónica,Audífonos con cancelación de ruido,Ciudad de México,Web,Estándar,1,3990,6
+2026-06-24,MER-100309,Ropa,Sudadera con capucha,Ciudad de México,Marketplace,Estándar,1,899,4
+2026-06-25,MER-100267,Electrónica,Audífonos con cancelación de ruido,Yucatán,Web,Estándar,1,3990,4
+2026-06-26,MER-100105,Hogar,Cafetera de goteo programable,Puebla,Marketplace,Estándar,1,1490,4
+2026-06-27,MER-100056,Hogar,Silla ergonómica de oficina,Jalisco,Marketplace,Estándar,2,10980,4
+2026-06-27,MER-100364,Electrónica,Laptop Meridia Pro 14,Jalisco,Marketplace,Estándar,1,24990,5
+2026-06-29,MER-100304,Electrónica,Teclado mecánico retroiluminado,Puebla,App móvil,Estándar,3,5670,5
+2026-06-30,MER-100180,Ropa,Camiseta de algodón orgánico,Nuevo León,Marketplace,Exprés,1,399,2
+2026-07-01,MER-100334,Accesorios,Cargador USB-C de 65 W,Puebla,Marketplace,Estándar,3,2370,6
+2026-07-03,MER-100183,Hogar,Cafetera de goteo programable,Yucatán,Marketplace,Mismo día,1,1490,0
+2026-07-04,MER-100325,Ropa,Chamarra ligera impermeable,Jalisco,App móvil,Estándar,2,3380,3
+2026-07-05,MER-100025,Hogar,Silla ergonómica de oficina,Jalisco,Web,Estándar,2,10980,3
+2026-07-06,MER-100080,Accesorios,Funda protectora para laptop,Puebla,Web,Exprés,1,490,2
+2026-07-08,MER-100028,Accesorios,Cargador USB-C de 65 W,Puebla,Marketplace,Estándar,1,790,3
+2026-07-09,MER-100198,Ropa,Chamarra ligera impermeable,Ciudad de México,Web,Estándar,1,1690,4
+2026-07-10,MER-100332,Accesorios,Cargador USB-C de 65 W,Nuevo León,App móvil,Estándar,2,1580,5
+2026-07-11,MER-100410,Hogar,Cafetera de goteo programable,Nuevo León,Marketplace,Estándar,1,1490,6
+2026-07-12,MER-100240,Accesorios,Mochila para laptop impermeable,Jalisco,Web,Estándar,3,3870,5
+2026-07-12,MER-100256,Hogar,Cafetera de goteo programable,Baja California,Marketplace,Mismo día,1,1490,0
+2026-07-13,MER-100084,Ropa,Chamarra ligera impermeable,Nuevo León,Web,Exprés,2,3380,2
+2026-07-14,MER-100030,Hogar,Silla ergonómica de oficina,Puebla,Web,Estándar,1,5490,5
+2026-07-14,MER-100141,Electrónica,Laptop Meridia Pro 14,Puebla,Marketplace,Estándar,1,24990,4
+2026-07-16,MER-100099,Hogar,Cafetera de goteo programable,Ciudad de México,Marketplace,Estándar,1,1490,6
+2026-07-16,MER-100312,Ropa,Camiseta de algodón orgánico,Jalisco,Marketplace,Exprés,2,798,2
+2026-07-17,MER-100038,Electrónica,Audífonos con cancelación de ruido,Puebla,Web,Exprés,2,7980,2
+2026-07-17,MER-100179,Electrónica,Audífonos con cancelación de ruido,Puebla,Web,Estándar,1,3990,3
+2026-07-18,MER-100258,Hogar,Escritorio elevable,Yucatán,Marketplace,Estándar,2,17980,5
+2026-07-20,MER-100233,Accesorios,Mochila para laptop impermeable,Nuevo León,Web,Exprés,3,3870,2
+2026-07-23,MER-100417,Hogar,Silla ergonómica de oficina,Jalisco,App móvil,Estándar,1,5490,4
+2026-07-24,MER-100046,Electrónica,Teclado mecánico retroiluminado,Nuevo León,Web,Estándar,2,3780,6
+2026-07-24,MER-100136,Hogar,Lámpara de escritorio LED,Nuevo León,Marketplace,Estándar,3,2670,5
+2026-07-26,MER-100151,Electrónica,Laptop Meridia Pro 14,Nuevo León,Web,Estándar,1,24990,5
+2026-07-26,MER-100162,Accesorios,Mochila para laptop impermeable,Jalisco,App móvil,Estándar,1,1290,4
+2026-07-26,MER-100218,Hogar,Cafetera de goteo programable,Ciudad de México,Marketplace,Estándar,2,2980,5
+2026-07-26,MER-100292,Accesorios,Cargador USB-C de 65 W,Puebla,App móvil,Estándar,3,2370,6
+2026-07-27,MER-100161,Electrónica,Monitor curvo 27 pulgadas,Baja California,Web,Exprés,3,19470,2
+2026-07-27,MER-100172,Hogar,Lámpara de escritorio LED,Yucatán,App móvil,Mismo día,1,890,0
+2026-07-28,MER-100281,Accesorios,Mochila para laptop impermeable,Nuevo León,Web,Exprés,2,2580,2
+2026-07-30,MER-100115,Accesorios,Funda protectora para laptop,Jalisco,Web,Estándar,2,980,6
+2026-07-30,MER-100347,Ropa,Sudadera con capucha,Puebla,Web,Estándar,1,899,4
+2026-08-01,MER-100405,Electrónica,Monitor curvo 27 pulgadas,Jalisco,App móvil,Estándar,1,6490,3
+2026-08-02,MER-100299,Hogar,Silla ergonómica de oficina,Puebla,Marketplace,Estándar,1,5490,3
+2026-08-03,MER-100173,Accesorios,Mochila para laptop impermeable,Baja California,Web,Exprés,1,1290,1
+2026-08-04,MER-100188,Electrónica,Monitor curvo 27 pulgadas,Nuevo León,Web,Estándar,2,12980,3
+2026-08-05,MER-100085,Ropa,Camiseta de algodón orgánico,Baja California,Marketplace,Exprés,1,399,2
+2026-08-08,MER-100121,Accesorios,Funda protectora para laptop,Ciudad de México,Web,Estándar,1,490,3
+2026-08-09,MER-100095,Hogar,Escritorio elevable,Baja California,Marketplace,Exprés,2,17980,1
+2026-08-10,MER-100131,Hogar,Escritorio elevable,Puebla,Web,Estándar,3,26970,5
+2026-08-10,MER-100140,Accesorios,Mochila para laptop impermeable,Baja California,App móvil,Estándar,3,3870,6
+2026-08-13,MER-100231,Accesorios,Cargador USB-C de 65 W,Ciudad de México,Marketplace,Estándar,2,1580,3
+2026-08-13,MER-100274,Ropa,Camiseta de algodón orgánico,Yucatán,App móvil,Estándar,2,798,5
+2026-08-14,MER-100076,Electrónica,Laptop Meridia Pro 14,Yucatán,Web,Estándar,1,24990,4
+2026-08-15,MER-100194,Electrónica,Audífonos con cancelación de ruido,Yucatán,Web,Exprés,1,3990,1
+2026-08-15,MER-100230,Electrónica,Audífonos con cancelación de ruido,Nuevo León,Web,Estándar,1,3990,3
+2026-08-15,MER-100283,Hogar,Silla ergonómica de oficina,Puebla,Web,Estándar,2,10980,5
+2026-08-16,MER-100122,Accesorios,Mochila para laptop impermeable,Baja California,App móvil,Exprés,2,2580,1
+2026-08-17,MER-100352,Electrónica,Audífonos con cancelación de ruido,Yucatán,App móvil,Estándar,2,7980,3
+2026-08-18,MER-100160,Electrónica,Monitor curvo 27 pulgadas,Yucatán,App móvil,Estándar,1,6490,5
+2026-08-19,MER-100380,Electrónica,Teclado mecánico retroiluminado,Puebla,Web,Estándar,1,1890,3
+2026-08-20,MER-100061,Accesorios,Funda protectora para laptop,Nuevo León,Marketplace,Estándar,1,490,3
+2026-08-20,MER-100068,Electrónica,Teclado mecánico retroiluminado,Ciudad de México,Web,Estándar,2,3780,5
+2026-08-20,MER-100077,Ropa,Camiseta de algodón orgánico,Yucatán,App móvil,Estándar,2,798,6
+2026-08-21,MER-100114,Electrónica,Laptop Meridia Pro 14,Ciudad de México,App móvil,Estándar,1,24990,3
+2026-08-22,MER-100132,Ropa,Sudadera con capucha,Baja California,App móvil,Estándar,1,899,3
+2026-08-22,MER-100242,Ropa,Camiseta de algodón orgánico,Ciudad de México,Marketplace,Exprés,2,798,2
+2026-08-22,MER-100361,Hogar,Silla ergonómica de oficina,Nuevo León,App móvil,Estándar,1,5490,5
+2026-08-23,MER-100069,Ropa,Camiseta de algodón orgánico,Puebla,Web,Estándar,2,798,6
+2026-08-25,MER-100324,Electrónica,Monitor curvo 27 pulgadas,Nuevo León,App móvil,Exprés,2,12980,2
+2026-08-25,MER-100374,Accesorios,Cargador USB-C de 65 W,Nuevo León,App móvil,Estándar,1,790,6
+2026-08-26,MER-100063,Electrónica,Audífonos con cancelación de ruido,Puebla,Web,Mismo día,2,7980,0
+2026-08-27,MER-100156,Ropa,Chamarra ligera impermeable,Yucatán,App móvil,Exprés,2,3380,2
+2026-08-27,MER-100259,Ropa,Camiseta de algodón orgánico,Nuevo León,Web,Estándar,3,1197,3
+2026-08-28,MER-100054,Accesorios,Mochila para laptop impermeable,Nuevo León,Marketplace,Estándar,2,2580,6
+2026-08-29,MER-100032,Accesorios,Cargador USB-C de 65 W,Baja California,Web,Exprés,2,1580,2
+2026-08-29,MER-100234,Accesorios,Funda protectora para laptop,Jalisco,Marketplace,Estándar,1,490,5
+2026-08-29,MER-100369,Ropa,Sudadera con capucha,Yucatán,App móvil,Estándar,3,2697,3
+2026-08-30,MER-100123,Ropa,Chamarra ligera impermeable,Yucatán,App móvil,Exprés,2,3380,2
+2026-08-31,MER-100182,Electrónica,Teclado mecánico retroiluminado,Nuevo León,App móvil,Estándar,2,3780,5
+2026-08-31,MER-100394,Accesorios,Funda protectora para laptop,Baja California,Marketplace,Estándar,3,1470,6
+2026-09-01,MER-100382,Electrónica,Audífonos con cancelación de ruido,Ciudad de México,Web,Estándar,2,7980,4
+2026-09-02,MER-100008,Electrónica,Laptop Meridia Pro 14,Baja California,App móvil,Estándar,2,49980,5
+2026-09-03,MER-100009,Electrónica,Teclado mecánico retroiluminado,Baja California,Marketplace,Exprés,2,3780,1
+2026-09-05,MER-100163,Hogar,Cafetera de goteo programable,Baja California,Web,Mismo día,1,1490,0
+2026-09-06,MER-100070,Electrónica,Audífonos con cancelación de ruido,Yucatán,App móvil,Estándar,1,3990,6
+2026-09-06,MER-100248,Electrónica,Teclado mecánico retroiluminado,Ciudad de México,Marketplace,Estándar,1,1890,3
+2026-09-06,MER-100285,Electrónica,Audífonos con cancelación de ruido,Ciudad de México,Marketplace,Estándar,2,7980,4
+2026-09-08,MER-100113,Ropa,Chamarra ligera impermeable,Ciudad de México,Marketplace,Estándar,3,5070,3
+2026-09-08,MER-100220,Electrónica,Teclado mecánico retroiluminado,Puebla,App móvil,Estándar,2,3780,4
+2026-09-10,MER-100289,Accesorios,Cargador USB-C de 65 W,Jalisco,Web,Estándar,2,1580,3
+2026-09-11,MER-100221,Accesorios,Cargador USB-C de 65 W,Baja California,App móvil,Estándar,1,790,3
+2026-09-13,MER-100116,Electrónica,Monitor curvo 27 pulgadas,Nuevo León,Web,Estándar,3,19470,3
+2026-09-13,MER-100247,Ropa,Chamarra ligera impermeable,Puebla,Marketplace,Estándar,2,3380,5
+2026-09-14,MER-100290,Hogar,Lámpara de escritorio LED,Nuevo León,Web,Exprés,2,1780,2
+2026-09-16,MER-100004,Hogar,Cafetera de goteo programable,Ciudad de México,App móvil,Exprés,1,1490,2
+2026-09-16,MER-100064,Hogar,Cafetera de goteo programable,Ciudad de México,Marketplace,Exprés,1,1490,1
+2026-09-16,MER-100336,Hogar,Cafetera de goteo programable,Baja California,Marketplace,Estándar,2,2980,4
+2026-09-17,MER-100159,Hogar,Cafetera de goteo programable,Yucatán,Web,Exprés,2,2980,1
+2026-09-17,MER-100355,Accesorios,Cargador USB-C de 65 W,Nuevo León,Marketplace,Estándar,1,790,4
+2026-09-19,MER-100133,Accesorios,Mochila para laptop impermeable,Baja California,App móvil,Estándar,1,1290,6
+2026-09-20,MER-100137,Accesorios,Funda protectora para laptop,Baja California,Web,Estándar,1,490,4
+2026-09-20,MER-100154,Hogar,Escritorio elevable,Ciudad de México,Marketplace,Exprés,2,17980,1
+2026-09-20,MER-100241,Electrónica,Teclado mecánico retroiluminado,Puebla,App móvil,Estándar,3,5670,5
+2026-09-21,MER-100065,Electrónica,Audífonos con cancelación de ruido,Puebla,Marketplace,Exprés,1,3990,2
+2026-09-23,MER-100082,Electrónica,Laptop Meridia Pro 14,Jalisco,Web,Estándar,1,24990,6
+2026-09-24,MER-100094,Accesorios,Cargador USB-C de 65 W,Puebla,Web,Estándar,2,1580,3
+2026-09-24,MER-100328,Accesorios,Cargador USB-C de 65 W,Jalisco,App móvil,Estándar,1,790,4
+2026-09-26,MER-100331,Electrónica,Audífonos con cancelación de ruido,Nuevo León,App móvil,Estándar,1,3990,5
+2026-09-27,MER-100053,Electrónica,Laptop Meridia Pro 14,Ciudad de México,Marketplace,Estándar,2,49980,5
+2026-09-27,MER-100229,Accesorios,Mochila para laptop impermeable,Yucatán,Marketplace,Estándar,1,1290,5
+2026-09-29,MER-100124,Electrónica,Teclado mecánico retroiluminado,Nuevo León,Marketplace,Estándar,2,3780,3
+2026-10-02,MER-100153,Hogar,Silla ergonómica de oficina,Jalisco,App móvil,Estándar,2,10980,5
+2026-10-02,MER-100235,Accesorios,Cargador USB-C de 65 W,Puebla,Marketplace,Estándar,3,2370,4
+2026-10-03,MER-100109,Accesorios,Cargador USB-C de 65 W,Puebla,App móvil,Estándar,1,790,4
+2026-10-03,MER-100306,Hogar,Silla ergonómica de oficina,Baja California,Marketplace,Estándar,3,16470,3
+2026-10-03,MER-100341,Electrónica,Audífonos con cancelación de ruido,Ciudad de México,Marketplace,Estándar,2,7980,6
+2026-10-04,MER-100397,Electrónica,Audífonos con cancelación de ruido,Jalisco,App móvil,Estándar,3,11970,6
+2026-10-07,MER-100278,Ropa,Camiseta de algodón orgánico,Jalisco,Marketplace,Exprés,1,399,1
+2026-10-08,MER-100191,Hogar,Silla ergonómica de oficina,Jalisco,App móvil,Estándar,3,16470,3
+2026-10-11,MER-100307,Ropa,Camiseta de algodón orgánico,Jalisco,App móvil,Estándar,3,1197,3
+2026-10-11,MER-100419,Electrónica,Teclado mecánico retroiluminado,Baja California,App móvil,Estándar,1,1890,3
+2026-10-13,MER-100126,Ropa,Sudadera con capucha,Yucatán,App móvil,Estándar,1,899,4
+2026-10-13,MER-100238,Hogar,Cafetera de goteo programable,Yucatán,Marketplace,Estándar,1,1490,5
+2026-10-13,MER-100412,Hogar,Silla ergonómica de oficina,Yucatán,App móvil,Estándar,2,10980,5
+2026-10-14,MER-100091,Ropa,Sudadera con capucha,Ciudad de México,App móvil,Exprés,1,899,1
+2026-10-15,MER-100413,Ropa,Sudadera con capucha,Baja California,Web,Estándar,3,2697,3
+2026-10-16,MER-100015,Accesorios,Funda protectora para laptop,Jalisco,Marketplace,Estándar,2,980,6
+2026-10-16,MER-100103,Hogar,Lámpara de escritorio LED,Ciudad de México,App móvil,Estándar,2,1780,4
+2026-10-16,MER-100196,Hogar,Lámpara de escritorio LED,Jalisco,App móvil,Estándar,1,890,4
+2026-10-19,MER-100295,Hogar,Lámpara de escritorio LED,Ciudad de México,App móvil,Estándar,2,1780,4
+2026-10-19,MER-100302,Ropa,Sudadera con capucha,Jalisco,Marketplace,Exprés,1,899,1
+2026-10-21,MER-100146,Hogar,Cafetera de goteo programable,Nuevo León,App móvil,Estándar,3,4470,3
+2026-10-22,MER-100368,Ropa,Sudadera con capucha,Baja California,Web,Estándar,1,899,6
+2026-10-23,MER-100039,Hogar,Escritorio elevable,Yucatán,Marketplace,Estándar,2,17980,4
+2026-10-23,MER-100062,Hogar,Cafetera de goteo programable,Ciudad de México,Web,Estándar,1,1490,3
+2026-10-25,MER-100138,Electrónica,Audífonos con cancelación de ruido,Yucatán,App móvil,Estándar,2,7980,6
+2026-10-25,MER-100213,Accesorios,Mochila para laptop impermeable,Yucatán,Web,Exprés,1,1290,1
+2026-10-25,MER-100294,Ropa,Chamarra ligera impermeable,Jalisco,Marketplace,Mismo día,1,1690,0
+2026-10-27,MER-100205,Accesorios,Mochila para laptop impermeable,Ciudad de México,Marketplace,Estándar,3,3870,3
+2026-10-29,MER-100330,Accesorios,Funda protectora para laptop,Baja California,Web,Estándar,1,490,3
+2026-10-29,MER-100396,Hogar,Escritorio elevable,Ciudad de México,App móvil,Estándar,2,17980,4
+2026-10-30,MER-100208,Electrónica,Laptop Meridia Pro 14,Baja California,App móvil,Estándar,2,49980,5
+2026-10-31,MER-100400,Electrónica,Teclado mecánico retroiluminado,Baja California,Marketplace,Estándar,1,1890,5
+2026-11-01,MER-100057,Ropa,Chamarra ligera impermeable,Jalisco,Web,Exprés,3,5070,2
+2026-11-01,MER-100111,Accesorios,Mochila para laptop impermeable,Yucatán,Marketplace,Estándar,3,3870,6
+2026-11-04,MER-100379,Ropa,Sudadera con capucha,Puebla,Marketplace,Estándar,2,1798,4
+2026-11-06,MER-100006,Electrónica,Monitor curvo 27 pulgadas,Nuevo León,App móvil,Estándar,3,19470,5
+2026-11-06,MER-100323,Accesorios,Cargador USB-C de 65 W,Jalisco,App móvil,Exprés,2,1580,2
+2026-11-09,MER-100237,Accesorios,Cargador USB-C de 65 W,Yucatán,App móvil,Estándar,1,790,3
+2026-11-09,MER-100358,Hogar,Silla ergonómica de oficina,Jalisco,Marketplace,Exprés,1,5490,1
+2026-11-09,MER-100390,Hogar,Lámpara de escritorio LED,Jalisco,Web,Exprés,2,1780,2
+2026-11-10,MER-100005,Ropa,Chamarra ligera impermeable,Ciudad de México,Marketplace,Estándar,2,3380,5
+2026-11-12,MER-100216,Accesorios,Cargador USB-C de 65 W,Jalisco,App móvil,Estándar,3,2370,6
+2026-11-14,MER-100001,Hogar,Cafetera de goteo programable,Yucatán,Marketplace,Exprés,1,1490,1
+2026-11-15,MER-100203,Accesorios,Cargador USB-C de 65 W,Yucatán,App móvil,Estándar,2,1580,5
+2026-11-15,MER-100395,Accesorios,Mochila para laptop impermeable,Yucatán,Web,Estándar,1,1290,4
+2026-11-17,MER-100016,Hogar,Escritorio elevable,Puebla,Marketplace,Mismo día,1,8990,0
+2026-11-18,MER-100066,Ropa,Sudadera con capucha,Ciudad de México,Marketplace,Exprés,3,2697,1
+2026-11-18,MER-100326,Electrónica,Audífonos con cancelación de ruido,Puebla,Web,Estándar,3,11970,3
+2026-11-19,MER-100083,Electrónica,Monitor curvo 27 pulgadas,Jalisco,App móvil,Estándar,2,12980,6
+2026-11-19,MER-100167,Electrónica,Laptop Meridia Pro 14,Ciudad de México,Web,Estándar,1,24990,6
+2026-11-19,MER-100329,Electrónica,Audífonos con cancelación de ruido,Puebla,App móvil,Estándar,2,7980,4
+2026-11-19,MER-100370,Ropa,Chamarra ligera impermeable,Yucatán,Marketplace,Estándar,1,1690,5
+2026-11-21,MER-100356,Accesorios,Funda protectora para laptop,Puebla,Marketplace,Estándar,3,1470,5
+2026-11-22,MER-100168,Ropa,Sudadera con capucha,Baja California,Web,Estándar,2,1798,6
+2026-11-22,MER-100402,Ropa,Chamarra ligera impermeable,Ciudad de México,Web,Estándar,1,1690,6
+2026-11-23,MER-100150,Hogar,Lámpara de escritorio LED,Ciudad de México,App móvil,Estándar,3,2670,6
+2026-11-23,MER-100201,Ropa,Sudadera con capucha,Jalisco,Marketplace,Estándar,2,1798,3
+2026-11-23,MER-100265,Electrónica,Laptop Meridia Pro 14,Yucatán,Marketplace,Estándar,1,24990,4
+2026-11-24,MER-100010,Electrónica,Laptop Meridia Pro 14,Puebla,Marketplace,Mismo día,3,74970,0
+2026-11-26,MER-100271,Ropa,Camiseta de algodón orgánico,Yucatán,Marketplace,Exprés,1,399,2
+2026-11-28,MER-100204,Electrónica,Laptop Meridia Pro 14,Ciudad de México,Web,Exprés,1,24990,2
+2026-11-29,MER-100404,Ropa,Chamarra ligera impermeable,Puebla,App móvil,Estándar,3,5070,5
+2026-11-30,MER-100125,Hogar,Escritorio elevable,Puebla,App móvil,Exprés,2,17980,1
+2026-12-01,MER-100034,Accesorios,Funda protectora para laptop,Puebla,Web,Estándar,1,490,4
+2026-12-01,MER-100209,Hogar,Escritorio elevable,Puebla,Marketplace,Estándar,1,8990,5
+2026-12-01,MER-100272,Hogar,Lámpara de escritorio LED,Nuevo León,Web,Estándar,2,1780,6
+2026-12-01,MER-100407,Hogar,Silla ergonómica de oficina,Jalisco,Web,Exprés,1,5490,1
+2026-12-03,MER-100246,Hogar,Escritorio elevable,Baja California,Marketplace,Estándar,2,17980,3
+2026-12-03,MER-100291,Hogar,Lámpara de escritorio LED,Puebla,App móvil,Estándar,1,890,4
+2026-12-04,MER-100366,Electrónica,Audífonos con cancelación de ruido,Puebla,Web,Exprés,2,7980,1
+2026-12-04,MER-100383,Ropa,Camiseta de algodón orgánico,Ciudad de México,Web,Estándar,1,399,6
+2026-12-06,MER-100252,Electrónica,Teclado mecánico retroiluminado,Baja California,App móvil,Exprés,1,1890,1
+2026-12-07,MER-100108,Accesorios,Cargador USB-C de 65 W,Jalisco,Web,Estándar,1,790,6
+2026-12-07,MER-100348,Hogar,Escritorio elevable,Jalisco,App móvil,Exprés,3,26970,1
+2026-12-09,MER-100096,Accesorios,Cargador USB-C de 65 W,Puebla,Web,Estándar,2,1580,3
+2026-12-09,MER-100100,Hogar,Escritorio elevable,Baja California,Marketplace,Exprés,1,8990,1
+2026-12-09,MER-100155,Electrónica,Monitor curvo 27 pulgadas,Nuevo León,App móvil,Mismo día,1,6490,0
+2026-12-09,MER-100202,Ropa,Sudadera con capucha,Ciudad de México,App móvil,Estándar,1,899,3
+2026-12-10,MER-100033,Ropa,Chamarra ligera impermeable,Nuevo León,App móvil,Estándar,2,3380,4
+2026-12-10,MER-100078,Hogar,Escritorio elevable,Jalisco,App móvil,Estándar,1,8990,6
+2026-12-11,MER-100027,Ropa,Chamarra ligera impermeable,Jalisco,Web,Estándar,1,1690,6
+2026-12-12,MER-100073,Hogar,Lámpara de escritorio LED,Jalisco,App móvil,Exprés,1,890,1
+2026-12-12,MER-100217,Electrónica,Monitor curvo 27 pulgadas,Jalisco,Marketplace,Estándar,2,12980,4
+2026-12-12,MER-100320,Accesorios,Mochila para laptop impermeable,Ciudad de México,Marketplace,Estándar,1,1290,5
+2026-12-13,MER-100199,Ropa,Camiseta de algodón orgánico,Yucatán,Marketplace,Estándar,1,399,5
+2026-12-13,MER-100418,Ropa,Camiseta de algodón orgánico,Ciudad de México,Marketplace,Estándar,3,1197,5
+2026-12-14,MER-100019,Accesorios,Mochila para laptop impermeable,Baja California,App móvil,Exprés,2,2580,2
+2026-12-14,MER-100195,Hogar,Escritorio elevable,Nuevo León,App móvil,Estándar,1,8990,5
+2026-12-14,MER-100365,Ropa,Sudadera con capucha,Puebla,Web,Exprés,3,2697,2
+2026-12-15,MER-100052,Electrónica,Monitor curvo 27 pulgadas,Jalisco,Web,Exprés,1,6490,1
+2026-12-15,MER-100357,Electrónica,Monitor curvo 27 pulgadas,Baja California,Marketplace,Estándar,1,6490,5
+2026-12-17,MER-100190,Electrónica,Teclado mecánico retroiluminado,Baja California,Web,Mismo día,2,3780,0
+2026-12-19,MER-100081,Ropa,Chamarra ligera impermeable,Nuevo León,Marketplace,Estándar,3,5070,3
+2026-12-20,MER-100072,Electrónica,Laptop Meridia Pro 14,Puebla,App móvil,Estándar,2,49980,5
+2026-12-20,MER-100219,Accesorios,Mochila para laptop impermeable,Ciudad de México,Marketplace,Estándar,1,1290,6
+2026-12-23,MER-100392,Hogar,Cafetera de goteo programable,Baja California,Marketplace,Exprés,2,2980,1
+2026-12-25,MER-100175,Accesorios,Mochila para laptop impermeable,Nuevo León,App móvil,Estándar,1,1290,3
+2026-12-25,MER-100298,Electrónica,Monitor curvo 27 pulgadas,Puebla,Marketplace,Estándar,1,6490,5
+2026-12-26,MER-100318,Hogar,Lámpara de escritorio LED,Jalisco,App móvil,Estándar,3,2670,6
+2026-12-27,MER-100037,Accesorios,Mochila para laptop impermeable,Puebla,App móvil,Estándar,2,2580,5
+2026-12-29,MER-100017,Electrónica,Laptop Meridia Pro 14,Puebla,Web,Estándar,1,24990,6
+2026-12-29,MER-100036,Hogar,Cafetera de goteo programable,Puebla,Marketplace,Estándar,2,2980,3

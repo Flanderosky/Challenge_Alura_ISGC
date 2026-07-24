@@ -29,8 +29,11 @@ RUN pip install --no-cache-dir --upgrade pip \
 
 # El modelo de embeddings se descarga en el build para que el primer arranque
 # no dependa de la red. El chmod lo deja legible para el usuario no-root.
+# El nombre va escrito aquí y no importado de src/ porque este paso corre
+# antes de copiar el código, para no invalidar la capa en cada cambio.
+# Debe coincidir con EMBEDDING_MODEL de src/vectorstore.py.
 RUN mkdir -p /opt/hf \
-    && python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')" \
+    && python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('intfloat/multilingual-e5-small')" \
     && chmod -R a+rX /opt/hf
 
 # UID 1000 a propósito: es el del usuario por defecto en las imágenes de OCI

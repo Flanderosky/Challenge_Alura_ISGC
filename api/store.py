@@ -20,7 +20,15 @@ from src.vectorstore import create_vector_store
 DATA_DIR = os.path.join("data")
 UPLOAD_DIR = os.path.join(DATA_DIR, "uploads")
 REGISTRY_PATH = os.path.join(UPLOAD_DIR, "registry.json")
-SEED_FILES = ["politicas_ejemplo.pdf", "ventas_ejemplo.csv"]
+SEED_FILES = [
+    "politica_devoluciones.pdf",
+    "guia_envios.pdf",
+    "politica_privacidad.pdf",
+    "preguntas_frecuentes.pdf",
+    "terminos_condiciones.pdf",
+    "pedidos_2026.csv",
+    "devoluciones_2026.csv",
+]
 ALLOWED_EXTENSIONS = {".pdf", ".csv"}
 MAX_UPLOAD_BYTES = 25 * 1024 * 1024
 

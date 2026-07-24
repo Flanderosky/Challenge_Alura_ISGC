@@ -23,17 +23,20 @@ SALIDA = "docs/ejemplos_respuestas.md"
 # Catálogo fijo: es lo que hace el documento reproducible. Cada pregunta
 # demuestra algo distinto, y la última demuestra lo más importante.
 PREGUNTAS = [
-    ("¿Cuántos días de vacaciones corresponden por año?",
-     "Recuperación sobre el PDF, con cita a la página concreta."),
-    ("¿Qué tecnologías se usan en el back-end?",
-     "Extrae varios datos de un mismo pasaje del PDF."),
-    ("¿Cuál fue el total de ventas y el producto más vendido?",
-     "Usa el fragmento de agregados del CSV: ninguna fila contiene el total."),
-    ("¿Qué región generó más ingresos?",
-     "Usa el fragmento de comparativa, calculado sobre todos los grupos."),
-    ("¿Y cuál fue el promedio?",
-     "Memoria conversacional: la pregunta solo se entiende con la anterior."),
-    ("¿Cuál es la política de coche de empresa?",
+    ("¿Cuánto tiempo tengo para devolver un producto electrónico?",
+     "Dato concreto de un PDF, con cita a la página exacta. El plazo de Electrónica "
+     "es una excepción al general, así que responderlo bien exige recuperar el pasaje correcto."),
+    ("¿Cuánto cuesta el envío y cuándo es gratis?",
+     "Combina varias condiciones de un mismo documento."),
+    ("¿Qué pasa si nadie recibe el paquete?",
+     "Pregunta en lenguaje natural que no usa ninguna palabra del documento: "
+     "obliga a la búsqueda semántica a trabajar."),
+    ("¿Qué categoría generó más ingresos?",
+     "Sale del fragmento de comparativa del CSV, calculado sobre todos los grupos. "
+     "Ninguna fila contiene esa suma."),
+    ("¿Y cuál es el motivo de devolución más frecuente?",
+     "Memoria conversacional y salto a otro documento en la misma conversación."),
+    ("¿Puedo pagar con criptomonedas?",
      "El agente no encuentra la respuesta y lo dice, en vez de inventarla."),
 ]
 

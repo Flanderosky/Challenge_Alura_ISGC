@@ -374,7 +374,8 @@ export class Flow {
       if (!nodo) continue;
       nodo.group.dataset.consulted = aporte ? 'true' : 'false';
       nodo.track?.setAttribute('opacity', aporte ? '1' : '0');
-      nodo.fill?.setAttribute('width', aporte ? (DOC.w - 62) * aporte.score : 0);
+      // la barra compara los documentos entre sí; el porcentaje es el valor real
+      nodo.fill?.setAttribute('width', aporte ? (DOC.w - 62) * (aporte.bar ?? aporte.score) : 0);
       if (nodo.label) nodo.label.textContent = aporte ? `${Math.round(aporte.score * 100)}%` : '';
       if (nodo.subtitulo) {
         nodo.subtitulo.textContent = aporte

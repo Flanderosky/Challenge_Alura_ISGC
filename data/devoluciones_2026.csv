@@ -1,0 +1,77 @@
+fecha_solicitud,pedido,categoria,producto,motivo,importe_reembolsado,dias_resolucion
+2026-01-21,MER-100277,Hogar,Silla ergonómica de oficina,Producto defectuoso,10980,3
+2026-01-25,MER-100157,Hogar,Lámpara de escritorio LED,Talla incorrecta,1780,7
+2026-02-03,MER-100189,Accesorios,Funda protectora para laptop,Producto defectuoso,1470,5
+2026-02-11,MER-100296,Ropa,Chamarra ligera impermeable,Dañado en tránsito,3380,3
+2026-02-12,MER-100211,Electrónica,Audífonos con cancelación de ruido,Producto equivocado,3990,5
+2026-03-01,MER-100315,Accesorios,Funda protectora para laptop,Producto defectuoso,490,5
+2026-03-06,MER-100007,Accesorios,Mochila para laptop impermeable,Producto equivocado,2580,12
+2026-03-06,MER-100143,Accesorios,Mochila para laptop impermeable,Talla incorrecta,1290,4
+2026-03-08,MER-100373,Hogar,Lámpara de escritorio LED,Dañado en tránsito,1780,12
+2026-03-12,MER-100253,Hogar,Silla ergonómica de oficina,Producto defectuoso,10980,8
+2026-03-17,MER-100097,Ropa,Sudadera con capucha,Producto defectuoso,1798,9
+2026-03-23,MER-100314,Hogar,Silla ergonómica de oficina,Producto defectuoso,10980,10
+2026-03-26,MER-100129,Electrónica,Audífonos con cancelación de ruido,Arrepentimiento,3990,11
+2026-04-05,MER-100346,Accesorios,Cargador USB-C de 65 W,Talla incorrecta,2370,11
+2026-04-12,MER-100342,Ropa,Chamarra ligera impermeable,Producto defectuoso,1690,3
+2026-04-14,MER-100193,Hogar,Cafetera de goteo programable,Talla incorrecta,2980,5
+2026-04-25,MER-100210,Hogar,Escritorio elevable,Producto equivocado,17980,8
+2026-04-25,MER-100262,Ropa,Chamarra ligera impermeable,Dañado en tránsito,1690,9
+2026-04-30,MER-100250,Hogar,Lámpara de escritorio LED,Producto equivocado,1780,8
+2026-05-09,MER-100174,Hogar,Escritorio elevable,Talla incorrecta,8990,3
+2026-05-10,MER-100387,Accesorios,Funda protectora para laptop,Producto defectuoso,980,4
+2026-05-12,MER-100377,Ropa,Camiseta de algodón orgánico,Arrepentimiento,399,11
+2026-05-17,MER-100322,Accesorios,Mochila para laptop impermeable,Producto equivocado,1290,10
+2026-05-20,MER-100177,Hogar,Lámpara de escritorio LED,Producto equivocado,1780,3
+2026-05-27,MER-100134,Electrónica,Laptop Meridia Pro 14,Arrepentimiento,49980,10
+2026-05-29,MER-100098,Accesorios,Cargador USB-C de 65 W,Dañado en tránsito,790,11
+2026-06-02,MER-100354,Electrónica,Monitor curvo 27 pulgadas,Talla incorrecta,12980,4
+2026-06-04,MER-100215,Hogar,Lámpara de escritorio LED,Arrepentimiento,1780,7
+2026-06-06,MER-100386,Hogar,Cafetera de goteo programable,Producto equivocado,1490,9
+2026-06-06,MER-100044,Hogar,Lámpara de escritorio LED,Producto defectuoso,2670,5
+2026-06-17,MER-100181,Hogar,Escritorio elevable,Arrepentimiento,8990,3
+2026-06-18,MER-100139,Ropa,Sudadera con capucha,Arrepentimiento,899,12
+2026-06-22,MER-100079,Accesorios,Mochila para laptop impermeable,Producto equivocado,1290,11
+2026-07-01,MER-100309,Ropa,Sudadera con capucha,Arrepentimiento,899,10
+2026-07-11,MER-100280,Hogar,Lámpara de escritorio LED,Producto equivocado,1780,7
+2026-07-14,MER-100080,Accesorios,Funda protectora para laptop,Producto defectuoso,490,4
+2026-07-19,MER-100312,Ropa,Camiseta de algodón orgánico,Producto defectuoso,798,12
+2026-07-20,MER-100141,Electrónica,Laptop Meridia Pro 14,Producto equivocado,24990,11
+2026-07-22,MER-100025,Hogar,Silla ergonómica de oficina,Talla incorrecta,10980,9
+2026-07-22,MER-100410,Hogar,Cafetera de goteo programable,Talla incorrecta,1490,12
+2026-08-10,MER-100115,Accesorios,Funda protectora para laptop,Talla incorrecta,980,11
+2026-08-15,MER-100405,Electrónica,Monitor curvo 27 pulgadas,Dañado en tránsito,6490,7
+2026-08-19,MER-100281,Accesorios,Mochila para laptop impermeable,Producto equivocado,2580,9
+2026-08-23,MER-100347,Ropa,Sudadera con capucha,Producto defectuoso,899,10
+2026-08-26,MER-100292,Accesorios,Cargador USB-C de 65 W,Arrepentimiento,2370,12
+2026-08-26,MER-100085,Ropa,Camiseta de algodón orgánico,Talla incorrecta,399,7
+2026-09-05,MER-100122,Accesorios,Mochila para laptop impermeable,Talla incorrecta,2580,5
+2026-09-06,MER-100061,Accesorios,Funda protectora para laptop,Arrepentimiento,490,8
+2026-09-11,MER-100160,Electrónica,Monitor curvo 27 pulgadas,Talla incorrecta,6490,4
+2026-09-14,MER-100283,Hogar,Silla ergonómica de oficina,Producto equivocado,10980,12
+2026-09-19,MER-100123,Ropa,Chamarra ligera impermeable,Producto defectuoso,3380,7
+2026-09-20,MER-100182,Electrónica,Teclado mecánico retroiluminado,Arrepentimiento,3780,6
+2026-09-21,MER-100008,Electrónica,Laptop Meridia Pro 14,Producto equivocado,49980,3
+2026-09-24,MER-100154,Hogar,Escritorio elevable,Arrepentimiento,17980,5
+2026-09-26,MER-100248,Electrónica,Teclado mecánico retroiluminado,Producto equivocado,1890,10
+2026-09-27,MER-100382,Electrónica,Audífonos con cancelación de ruido,Producto defectuoso,7980,9
+2026-10-04,MER-100220,Electrónica,Teclado mecánico retroiluminado,Talla incorrecta,3780,8
+2026-10-05,MER-100328,Accesorios,Cargador USB-C de 65 W,Arrepentimiento,790,10
+2026-10-05,MER-100331,Electrónica,Audífonos con cancelación de ruido,Dañado en tránsito,3990,4
+2026-10-15,MER-100341,Electrónica,Audífonos con cancelación de ruido,Dañado en tránsito,7980,6
+2026-11-09,MER-100126,Ropa,Sudadera con capucha,Dañado en tránsito,899,6
+2026-11-11,MER-100208,Electrónica,Laptop Meridia Pro 14,Producto defectuoso,49980,8
+2026-11-13,MER-100015,Accesorios,Funda protectora para laptop,Producto defectuoso,980,11
+2026-11-16,MER-100295,Hogar,Lámpara de escritorio LED,Producto defectuoso,1780,6
+2026-11-19,MER-100005,Ropa,Chamarra ligera impermeable,Producto defectuoso,3380,8
+2026-11-21,MER-100001,Hogar,Cafetera de goteo programable,Producto defectuoso,1490,8
+2026-11-24,MER-100329,Electrónica,Audífonos con cancelación de ruido,Dañado en tránsito,7980,6
+2026-11-28,MER-100265,Electrónica,Laptop Meridia Pro 14,Producto equivocado,24990,9
+2026-11-29,MER-100216,Accesorios,Cargador USB-C de 65 W,Producto defectuoso,2370,9
+2026-11-29,MER-100395,Accesorios,Mochila para laptop impermeable,Producto equivocado,1290,7
+2026-12-06,MER-100366,Electrónica,Audífonos con cancelación de ruido,Producto equivocado,7980,5
+2026-12-17,MER-100252,Electrónica,Teclado mecánico retroiluminado,Talla incorrecta,1890,10
+2026-12-23,MER-100096,Accesorios,Cargador USB-C de 65 W,Arrepentimiento,1580,7
+2027-01-03,MER-100219,Accesorios,Mochila para laptop impermeable,Producto defectuoso,1290,10
+2027-01-06,MER-100027,Ropa,Chamarra ligera impermeable,Producto defectuoso,1690,4
+2027-01-26,MER-100318,Hogar,Lámpara de escritorio LED,Talla incorrecta,2670,10

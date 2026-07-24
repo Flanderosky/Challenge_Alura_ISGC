@@ -3,138 +3,138 @@
 Generado con `python scripts/generar_ejemplos.py`. Todas las respuestas salen del
 mismo endpoint que usa la interfaz, con los tiempos medidos en la ejecución real.
 
-- **Fecha**: 2026-07-24 21:00 UTC
-- **Commit**: `9c56a42`
+- **Fecha**: 2026-07-24 21:33 UTC
+- **Commit**: `0588255`
 - **Servidor**: `http://localhost:8000`
 - **Modelo**: `gemini-3.1-flash-lite` · **k** = 6
-- **Biblioteca**: `politicas_ejemplo.pdf` (2 fragmentos), `ventas_ejemplo.csv` (7 fragmentos)
+- **Biblioteca**: `politica_devoluciones.pdf` (6 fragmentos), `guia_envios.pdf` (4 fragmentos), `politica_privacidad.pdf` (4 fragmentos), `preguntas_frecuentes.pdf` (4 fragmentos), `terminos_condiciones.pdf` (5 fragmentos), `pedidos_2026.csv` (68 fragmentos), `devoluciones_2026.csv` (20 fragmentos)
 
 ---
-### 1. ¿Cuántos días de vacaciones corresponden por año?
+### 1. ¿Cuánto tiempo tengo para devolver un producto electrónico?
 
-*Recuperación sobre el PDF, con cita a la página concreta.*
+*Dato concreto de un PDF, con cita a la página exacta. El plazo de Electrónica es una excepción al general, así que responderlo bien exige recuperar el pasaje correcto.*
 
 **Respuesta**
 
-> Todos los colaboradores tienen derecho a 15 días hábiles de vacaciones después de cada año de trabajo continuo [3].
+> Los productos de la categoría Electrónica tienen un plazo de 14 días naturales para solicitar la devolución [1], [4].
 
 **Fuentes recuperadas**
 
 | [n] | Documento | Ubicación | Relevancia |
 |-----|-----------|-----------|-----------:|
-| [1] | ventas_ejemplo.csv | desglose por fecha | 0.3084 |
-| [2] | ventas_ejemplo.csv | desglose por categoria | 0.3082 |
-| [3] | politicas_ejemplo.pdf | p. 1 | 0.3081 |
-| [4] | ventas_ejemplo.csv | desglose por region | 0.2681 |
-| [5] | politicas_ejemplo.pdf | p. 1 | 0.2181 |
-| [6] | ventas_ejemplo.csv | resumen | 0.1839 |
+| [1] | politica_devoluciones.pdf | p. 1 | 0.9817 |
+| [2] | politica_devoluciones.pdf | p. 1 | 0.9798 |
+| [3] | politica_devoluciones.pdf | p. 2 | 0.9758 |
+| [4] | preguntas_frecuentes.pdf | p. 1 | 0.9744 |
+| [5] | preguntas_frecuentes.pdf | p. 1 | 0.9735 |
+| [6] | politica_devoluciones.pdf | p. 2 | 0.9676 |
 
-**Tiempos** — vectorizar 13 ms · buscar 0 ms · primer token 1.05 s · modelo 1.11 s · **total 1.13 s**
+**Tiempos** — vectorizar 32 ms · buscar 0 ms · primer token 586 ms · modelo 692 ms · **total 728 ms**
 
-### 2. ¿Qué tecnologías se usan en el back-end?
+### 2. ¿Cuánto cuesta el envío y cuándo es gratis?
 
-*Extrae varios datos de un mismo pasaje del PDF.*
+*Combina varias condiciones de un mismo documento.*
 
 **Respuesta**
 
-> La plataforma principal de la empresa utiliza Python en el back-end [1].
+> El envío estándar tiene un costo de 99 pesos mexicanos y es gratuito en pedidos cuyo importe iguale o supere los 999 pesos [2]. El envío exprés tiene un costo de 199 pesos y no tiene umbral de gratuidad [2]. El envío el mismo día tiene un costo de 299 pesos [2].
 
 **Fuentes recuperadas**
 
 | [n] | Documento | Ubicación | Relevancia |
 |-----|-----------|-----------|-----------:|
-| [1] | politicas_ejemplo.pdf | p. 1 | 0.4803 |
-| [2] | politicas_ejemplo.pdf | p. 1 | 0.3992 |
-| [3] | ventas_ejemplo.csv | desglose por region | 0.2444 |
-| [4] | ventas_ejemplo.csv | desglose por categoria | 0.2357 |
-| [5] | ventas_ejemplo.csv | desglose por fecha | 0.2257 |
-| [6] | ventas_ejemplo.csv | resumen | 0.1199 |
+| [1] | preguntas_frecuentes.pdf | p. 1 | 0.9823 |
+| [2] | guia_envios.pdf | p. 1 | 0.9742 |
+| [3] | preguntas_frecuentes.pdf | p. 1 | 0.9671 |
+| [4] | preguntas_frecuentes.pdf | p. 1 | 0.9646 |
+| [5] | politica_devoluciones.pdf | p. 1 | 0.9610 |
+| [6] | politica_devoluciones.pdf | p. 2 | 0.9600 |
 
-**Tiempos** — vectorizar 11 ms · buscar 0 ms · primer token 554 ms · modelo 610 ms · **total 623 ms**
+**Tiempos** — vectorizar 27 ms · buscar 0 ms · primer token 592 ms · modelo 839 ms · **total 871 ms**
 
-### 3. ¿Cuál fue el total de ventas y el producto más vendido?
+### 3. ¿Qué pasa si nadie recibe el paquete?
 
-*Usa el fragmento de agregados del CSV: ninguna fila contiene el total.*
+*Pregunta en lenguaje natural que no usa ninguna palabra del documento: obliga a la búsqueda semántica a trabajar.*
 
 **Respuesta**
 
-> El total de ingreso sumando todos los registros es 286,150.00 [1]. El producto más frecuente es Laptop Pro [1].
+> La paquetería realiza hasta tres intentos de entrega en días hábiles consecutivos [2][5]. Tras el tercer intento fallido, el paquete se resguarda 5 días hábiles en la sucursal más cercana antes de retornar al centro de distribución de Meridia [2]. Si el pedido retorna por no haber sido recogido, se reembolsa el importe del producto descontando el costo del envío original [2][3].
 
 **Fuentes recuperadas**
 
 | [n] | Documento | Ubicación | Relevancia |
 |-----|-----------|-----------|-----------:|
-| [1] | ventas_ejemplo.csv | resumen | 0.4106 |
-| [2] | ventas_ejemplo.csv | desglose por region | 0.3582 |
-| [3] | politicas_ejemplo.pdf | p. 1 | 0.2702 |
-| [4] | ventas_ejemplo.csv | desglose por fecha | 0.2481 |
-| [5] | ventas_ejemplo.csv | desglose por categoria | 0.2210 |
-| [6] | politicas_ejemplo.pdf | p. 1 | 0.2045 |
+| [1] | guia_envios.pdf | p. 1 | 0.9518 |
+| [2] | guia_envios.pdf | p. 1 | 0.9485 |
+| [3] | guia_envios.pdf | p. 2 | 0.9468 |
+| [4] | preguntas_frecuentes.pdf | p. 1 | 0.9448 |
+| [5] | preguntas_frecuentes.pdf | p. 1 | 0.9374 |
+| [6] | politica_devoluciones.pdf | p. 1 | 0.9352 |
 
-**Tiempos** — vectorizar 17 ms · buscar 0 ms · primer token 567 ms · modelo 1.52 s · **total 1.54 s**
+**Tiempos** — vectorizar 23 ms · buscar 0 ms · primer token 510 ms · modelo 759 ms · **total 786 ms**
 
-### 4. ¿Qué región generó más ingresos?
+### 4. ¿Qué categoría generó más ingresos?
 
-*Usa el fragmento de comparativa, calculado sobre todos los grupos.*
+*Sale del fragmento de comparativa del CSV, calculado sobre todos los grupos. Ninguna fila contiene esa suma.*
 
 **Respuesta**
 
-> La región que generó más ingresos es la región Norte, con un total de 116,350.00 [1].
+> La categoría que generó más ingresos es Electrónica, con un importe total de 1,588,430.00 [1].
 
 **Fuentes recuperadas**
 
 | [n] | Documento | Ubicación | Relevancia |
 |-----|-----------|-----------|-----------:|
-| [1] | ventas_ejemplo.csv | desglose por region | 0.4233 |
-| [2] | ventas_ejemplo.csv | resumen | 0.2586 |
-| [3] | ventas_ejemplo.csv | desglose por fecha | 0.2533 |
-| [4] | ventas_ejemplo.csv | desglose por categoria | 0.2307 |
-| [5] | ventas_ejemplo.csv | filas 1–8 | 0.0788 |
-| [6] | politicas_ejemplo.pdf | p. 1 | 0.0503 |
+| [1] | pedidos_2026.csv | desglose por categoria | 0.9333 |
+| [2] | devoluciones_2026.csv | desglose por categoria | 0.9313 |
+| [3] | pedidos_2026.csv | desglose por canal | 0.9298 |
+| [4] | pedidos_2026.csv | comparativa por region | 0.9261 |
+| [5] | pedidos_2026.csv | resumen | 0.9256 |
+| [6] | pedidos_2026.csv | desglose por fecha | 0.9222 |
 
-**Tiempos** — vectorizar 12 ms · buscar 0 ms · primer token 556 ms · modelo 685 ms · **total 700 ms**
+**Tiempos** — vectorizar 32 ms · buscar 0 ms · primer token 578 ms · modelo 663 ms · **total 698 ms**
 
-### 5. ¿Y cuál fue el promedio?
+### 5. ¿Y cuál es el motivo de devolución más frecuente?
 
-*Memoria conversacional: la pregunta solo se entiende con la anterior.*
+*Memoria conversacional y salto a otro documento en la misma conversación.*
 
 **Respuesta**
 
-> El promedio de ingreso de la región Norte es 19,391.67 [1].
+> El motivo de devolución más frecuente es Producto defectuoso, con 22 registros [1].
 
 **Fuentes recuperadas**
 
 | [n] | Documento | Ubicación | Relevancia |
 |-----|-----------|-----------|-----------:|
-| [1] | ventas_ejemplo.csv | desglose por region | 0.3994 |
-| [2] | ventas_ejemplo.csv | desglose por fecha | 0.3901 |
-| [3] | ventas_ejemplo.csv | desglose por categoria | 0.2665 |
-| [4] | politicas_ejemplo.pdf | p. 1 | 0.1261 |
-| [5] | politicas_ejemplo.pdf | p. 1 | 0.0908 |
-| [6] | ventas_ejemplo.csv | resumen | 0.0390 |
+| [1] | devoluciones_2026.csv | desglose por motivo | 0.9621 |
+| [2] | devoluciones_2026.csv | comparativa por fecha_solicitud | 0.9588 |
+| [3] | politica_devoluciones.pdf | p. 1 | 0.9568 |
+| [4] | politica_devoluciones.pdf | p. 1 | 0.9559 |
+| [5] | preguntas_frecuentes.pdf | p. 1 | 0.9541 |
+| [6] | politica_devoluciones.pdf | p. 1 | 0.9538 |
 
-**Tiempos** — vectorizar 14 ms · buscar 0 ms · primer token 690 ms · modelo 778 ms · **total 796 ms**
+**Tiempos** — vectorizar 27 ms · buscar 0 ms · primer token 521 ms · modelo 624 ms · **total 655 ms**
 
-### 6. ¿Cuál es la política de coche de empresa?
+### 6. ¿Puedo pagar con criptomonedas?
 
 *El agente no encuentra la respuesta y lo dice, en vez de inventarla.*
 
 **Respuesta**
 
-> Los fragmentos proporcionados no contienen información sobre la política de coche de empresa; haría falta el documento de políticas de beneficios o compensaciones para responder.
+> Los fragmentos proporcionados no mencionan si se aceptan criptomonedas como método de pago; haría falta el documento de términos y condiciones completo o una lista actualizada de métodos de pago aceptados.
 
 **Fuentes recuperadas**
 
 | [n] | Documento | Ubicación | Relevancia |
 |-----|-----------|-----------|-----------:|
-| [1] | politicas_ejemplo.pdf | p. 1 | 0.2299 |
-| [2] | ventas_ejemplo.csv | desglose por fecha | 0.1245 |
-| [3] | ventas_ejemplo.csv | desglose por categoria | 0.0357 |
-| [4] | ventas_ejemplo.csv | resumen | 0.0224 |
-| [5] | ventas_ejemplo.csv | desglose por region | 0.0000 |
-| [6] | politicas_ejemplo.pdf | p. 1 | 0.0000 |
+| [1] | preguntas_frecuentes.pdf | p. 1 | 0.9494 |
+| [2] | politica_privacidad.pdf | p. 1 | 0.9387 |
+| [3] | terminos_condiciones.pdf | p. 2 | 0.9320 |
+| [4] | politica_privacidad.pdf | p. 2 | 0.9318 |
+| [5] | preguntas_frecuentes.pdf | p. 1 | 0.9303 |
+| [6] | terminos_condiciones.pdf | p. 2 | 0.9291 |
 
-**Tiempos** — vectorizar 14 ms · buscar 0 ms · primer token 588 ms · modelo 690 ms · **total 708 ms**
+**Tiempos** — vectorizar 22 ms · buscar 0 ms · primer token 694 ms · modelo 860 ms · **total 886 ms**
 
 ---
 

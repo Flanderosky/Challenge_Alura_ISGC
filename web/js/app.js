@@ -88,14 +88,14 @@ function pintarSugerencias() {
   const nombres = (app.state?.documents ?? []).map((d) => d.filename.toLowerCase());
   const sugerencias = [];
 
-  if (nombres.some((n) => n.includes('politica'))) {
-    sugerencias.push(
-      '¿Cuántos días de vacaciones corresponden por año?',
-      '¿Qué tecnologías se usan en el back-end?',
-    );
+  if (nombres.some((n) => n.includes('envio'))) {
+    sugerencias.push('¿Cuánto tarda un envío exprés y cuánto cuesta?');
   }
-  if (nombres.some((n) => n.includes('venta'))) {
-    sugerencias.push('¿Cuál fue el total de ventas y el producto más vendido?');
+  if (nombres.some((n) => n.includes('devolucion'))) {
+    sugerencias.push('¿Cuánto tiempo tengo para devolver un producto electrónico?');
+  }
+  if (nombres.some((n) => n.includes('pedidos'))) {
+    sugerencias.push('¿Qué categoría generó más ingresos?');
   }
   if (!sugerencias.length && app.state?.documents.length) {
     sugerencias.push('¿De qué trata este documento?', 'Resume los puntos principales.');
@@ -155,8 +155,26 @@ const enriquecer = (texto) =>
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\[(\d+)\]/g, '<button type="button" class="cite" data-n="$1">$1</button>');
 
+/**
+ * Escala para las barras de relevancia.
+ *
+ * El modelo de embeddings devuelve valores muy juntos (del orden de 0.92 a
+ * 0.98), así que una barra proporcional al valor absoluto sale siempre llena.
+ * La barra compara los fragmentos entre sí; el número que se muestra al lado
+ * sigue siendo la similitud real, sin tocar.
+ */
+function escalaRelevancia(hits) {
+  const valores = hits.map((h) => h.score);
+  const min = Math.min(...valores);
+  const max = Math.max(...valores);
+  const rango = max - min;
+  return (score) => (rango < 1e-6 ? 1 : 0.12 + 0.88 * ((score - min) / rango));
+}
+
 function pintarEvidencia(contenedor, hits) {
   if (!hits.length) return;
+
+  const escala = escalaRelevancia(hits);
 
   const bloque = document.createElement('div');
   bloque.className = 'evidence';
@@ -178,7 +196,7 @@ function pintarEvidencia(contenedor, hits) {
       <span class="source-n">[${hit.n}]</span>
       <span class="source-where">${escapar(hit.filename ?? 'documento')} <em>${escapar(hit.locator ?? '')}</em></span>
       <span class="source-score">
-        <span class="score-bar"><span class="score-fill" style="width:${Math.round(hit.score * 100)}%"></span></span>
+        <span class="score-bar"><span class="score-fill" style="width:${Math.round(escala(hit.score) * 100)}%"></span></span>
         <span class="score-num">${Math.round(hit.score * 100)}%</span>
       </span>`;
     fila.addEventListener('click', () => abrirFuente(hit));
@@ -233,12 +251,14 @@ async function enviar(pregunta) {
           if (evento.ms != null) fijarTelemetria(evento.id, evento.ms);
           break;
 
-        case 'hits':
+        case 'hits': {
           app.hits = evento.hits;
-          flow.setContributions(evento.contributions);
+          const escala = escalaRelevancia(evento.hits);
+          flow.setContributions(evento.contributions.map((c) => ({ ...c, bar: escala(c.score) })));
           flow.setHits(evento.hits);
           flow.pulseDocuments(evento.contributions);
           break;
+        }
 
         case 'token':
           respuesta += evento.text;

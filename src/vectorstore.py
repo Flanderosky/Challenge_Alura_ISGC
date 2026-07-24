@@ -12,13 +12,32 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 
-EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+# Modelo multilingüe y entrenado para recuperación. El anterior
+# (all-MiniLM-L6-v2) es monolingüe en inglés: sobre este corpus en español
+# dejaba fuera del top-6 la mitad de los documentos correctos.
+EMBEDDING_MODEL = "intfloat/multilingual-e5-small"
+
+
+class _E5Embeddings(HuggingFaceEmbeddings):
+    """
+    E5 espera que cada texto diga si es pregunta o pasaje.
+
+    Los prefijos se añaden solo al vectorizar: el contenido de los fragmentos
+    se guarda limpio, porque es el que se le muestra al usuario y el que se le
+    pasa al modelo de lenguaje.
+    """
+
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        return super().embed_documents([f"passage: {t}" for t in texts])
+
+    def embed_query(self, text: str) -> List[float]:
+        return super().embed_query(f"query: {text}")
 
 
 @lru_cache(maxsize=1)
 def get_embeddings() -> HuggingFaceEmbeddings:
     """Modelo de embeddings compartido. Vectores normalizados para que la similitud sea coseno."""
-    return HuggingFaceEmbeddings(
+    return _E5Embeddings(
         model_name=EMBEDDING_MODEL,
         model_kwargs={"device": "cpu"},
         encode_kwargs={"normalize_embeddings": True},

@@ -6,6 +6,8 @@ la respuesta pueda citar la fuente exacta y la interfaz pueda resaltarla.
 """
 
 import os
+import re
+from collections import Counter
 from typing import List, Optional
 
 import pandas as pd
@@ -22,6 +24,53 @@ _splitter = RecursiveCharacterTextSplitter(
     chunk_overlap=CHUNK_OVERLAP,
     separators=["\n\n", "\n", ". ", " ", ""],
 )
+
+
+LINEAS_CABECERA = 3
+LINEAS_PIE = 2
+
+
+def _sin_membrete(paginas: List[str]) -> List[str]:
+    """
+    Quita el encabezado y el pie que se repiten en todas las páginas.
+
+    Al extraer un PDF, el membrete entra como texto normal y se cuela en cada
+    fragmento. Eso diluye el vector: un fragmento sobre plazos de devolución
+    acaba pareciéndose a cualquier otro del mismo documento, y el que lleva la
+    respuesta deja de ganar la búsqueda.
+
+    Solo se miran las primeras y últimas líneas de cada página, y los números
+    se ignoran al comparar para que "página 1" y "página 2" cuenten como la
+    misma línea.
+    """
+    if len(paginas) < 2:
+        return paginas
+
+    normalizar = lambda linea: re.sub(r"\d+", "#", linea.strip())
+    lineas_por_pagina = [pagina.split("\n") for pagina in paginas]
+
+    repetidas: Counter = Counter()
+    for lineas in lineas_por_pagina:
+        candidatas = lineas[:LINEAS_CABECERA] + lineas[-LINEAS_PIE:]
+        for linea in {normalizar(l) for l in candidatas if l.strip()}:
+            repetidas[linea] += 1
+
+    umbral = max(2, len(paginas) * 0.6)
+    membrete = {texto for texto, veces in repetidas.items() if veces >= umbral}
+    if not membrete:
+        return paginas
+
+    limpias = []
+    for lineas in lineas_por_pagina:
+        bordes = set(range(LINEAS_CABECERA)) | set(range(len(lineas) - LINEAS_PIE, len(lineas)))
+        limpias.append(
+            "\n".join(
+                linea
+                for i, linea in enumerate(lineas)
+                if not (i in bordes and normalizar(linea) in membrete)
+            )
+        )
+    return limpias
 
 
 def _base_metadata(file_path: str, doc_id: Optional[str], filename: Optional[str]) -> dict:
@@ -42,11 +91,11 @@ def load_pdf(
         raise FileNotFoundError(f"No se encontró el archivo: {file_path}")
 
     base = _base_metadata(file_path, doc_id, filename)
-    pages = PyPDFLoader(file_path).load()
+    pages = _sin_membrete([p.page_content for p in PyPDFLoader(file_path).load()])
 
     chunks: List[Document] = []
-    for page_index, page in enumerate(pages, start=1):
-        text = page.page_content.strip()
+    for page_index, text in enumerate(pages, start=1):
+        text = text.strip()
         if not text:
             continue
         for piece in _splitter.split_text(text):
@@ -124,6 +173,18 @@ def _desglose(
     # Si viviera dentro del listado, al partirse en varios trozos el modelo
     # podría deducir el máximo de una lista incompleta y acertar por poco.
     comparativa = []
+
+    # "el más frecuente" es la pregunta más común sobre una columna categórica,
+    # y no se responde con las métricas numéricas: hay que rankear por conteo
+    conteos = {etiqueta: len(sub) for etiqueta, sub in grupos}
+    if len(conteos) > 1:
+        frecuente = max(conteos, key=conteos.__getitem__)
+        raro = min(conteos, key=conteos.__getitem__)
+        comparativa.append(
+            f"El valor más frecuente de {columna} es {frecuente}, con {conteos[frecuente]} "
+            f"registros. El menos frecuente es {raro}, con {conteos[raro]}."
+        )
+
     for col in numericas:
         totales = {etiqueta: sub[col].dropna().sum() for etiqueta, sub in grupos}
         totales = {k: v for k, v in totales.items() if pd.notna(v)}
@@ -309,7 +370,8 @@ def read_pages(file_path: str, filename: Optional[str] = None) -> List[str]:
     """Devuelve el texto de cada página (PDF) o bloque de filas (CSV), para el visor."""
     ext = os.path.splitext(filename or file_path)[1].lower()
     if ext == ".pdf":
-        return [page.page_content for page in PyPDFLoader(file_path).load()]
+        # el visor muestra el mismo texto que se indexó, para que el resaltado cuadre
+        return _sin_membrete([page.page_content for page in PyPDFLoader(file_path).load()])
     if ext == ".csv":
         df = pd.read_csv(file_path)
         paginas = []

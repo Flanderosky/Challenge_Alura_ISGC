@@ -1,5 +1,5 @@
 """
-API del agente Alura.
+API del agente documental de Meridia.
 
 /api/query devuelve un flujo de eventos (SSE) con lo que va ocurriendo de
 verdad en el pipeline: cuánto tardó cada etapa, qué fragmentos se recuperaron
@@ -50,7 +50,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 
 # Sin CORS a propósito: el front se sirve desde este mismo origen con rutas
 # relativas, así que ninguna petición es cross-origin.
-app = FastAPI(title="Alura · agente documental", version="2.1.0", lifespan=lifespan)
+app = FastAPI(title="Meridia · agente documental", version="2.1.0", lifespan=lifespan)
 
 
 class Turn(BaseModel):

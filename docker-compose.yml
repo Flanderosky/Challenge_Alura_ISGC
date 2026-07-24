@@ -1,7 +1,9 @@
 services:
-  alura-agente:
+  meridia-agente:
     build: .
-    container_name: alura-agente
+    # nombre distinto al del despliegue anterior: un contenedor parado sigue
+    # reservando su nombre, y el arranque fallaría por colisión
+    container_name: meridia-agente
     ports:
       # El contenedor escucha en 8000. En OCI se publica en el 8501, que ya
       # está abierto en la Security List, así que no hay que tocar la red.
