@@ -22,6 +22,27 @@ def test_load_csv_incluye_resumen_y_filas():
     assert any("Laptop Pro" in d.page_content for d in docs)
 
 
+def test_csv_genera_desgloses_por_categoria():
+    docs = load_document(CSV)
+    desgloses = [d for d in docs if d.metadata["unit"] == "breakdown"]
+    assert desgloses, "el CSV debería producir desgloses por columna categórica"
+
+    texto = "\n".join(d.page_content for d in desgloses)
+    # el desglose por producto es lo que permite sumar unidades de un producto
+    assert "Laptop Pro" in texto
+    assert "Mayor" in texto, "debería incluir el ranking explícito por métrica"
+    assert any("desglose por" in d.metadata["locator"] for d in desgloses)
+
+
+def test_desglose_ignora_columnas_identificador():
+    import pandas as pd
+
+    from src.loader import _csv_breakdowns
+
+    df = pd.DataFrame({"id": [f"r{i}" for i in range(10)], "monto": range(10)})
+    assert _csv_breakdowns(df, {"filename": "x.csv", "doc_id": "x"}) == []
+
+
 def test_load_pdf_anota_pagina():
     docs = load_document(PDF)
     assert docs

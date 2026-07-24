@@ -85,6 +85,7 @@ Reglas:
 - Cita la fuente con [n] al final de cada afirmación que la use. Usa el número del fragmento.
 - Si los fragmentos no contienen la respuesta, dilo en una frase y señala qué documento haría falta. No completes con conocimiento propio.
 - No inventes cifras, fechas ni nombres.
+- Si un fragmento se declara parcial, no deduzcas de él máximos, mínimos ni totales: usa el fragmento de comparativa, y si no está, dilo.
 - Responde en español, directo, sin preámbulos."""
 
 

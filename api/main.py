@@ -23,7 +23,7 @@ from src.agent import build_prompt, get_llm, model_name, stream_answer
 from src.vectorstore import embed_query, search_by_vector
 
 WEB_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "web")
-TOP_K = 4
+TOP_K = 6
 
 app = FastAPI(title="Alura · agente documental", version="2.0.0")
 app.add_middleware(

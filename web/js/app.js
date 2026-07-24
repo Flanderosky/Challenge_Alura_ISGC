@@ -183,7 +183,13 @@ function pintarEvidencia(contenedor, hits) {
   contenedor.append(bloque);
 }
 
+const DERIVADOS = new Set(['summary', 'breakdown']);
+
 function abrirFuente(hit) {
+  if (DERIVADOS.has(hit.unit)) {
+    library.showDerived(hit);
+    return;
+  }
   library.openDocument(hit.doc_id, { page: hit.page, highlight: hit.text });
 }
 

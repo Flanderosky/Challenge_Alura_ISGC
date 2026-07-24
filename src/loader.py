@@ -64,6 +64,140 @@ def load_pdf(
     return chunks
 
 
+MAX_CATEGORIAS = 40
+TOP_CATEGORIAS = 25
+
+
+def _es_fecha(serie: pd.Series) -> bool:
+    """Decide si una columna se puede tratar como fecha sin romperse en el intento."""
+    if serie.dtype.kind == "M":
+        return True
+    muestra = serie.dropna().astype(str).head(60)
+    if muestra.empty:
+        return False
+    try:
+        parsed = pd.to_datetime(muestra, errors="coerce", format="mixed")
+    except (ValueError, TypeError):
+        return False
+    return bool(parsed.notna().mean() > 0.8)
+
+
+def _metricas(sub: pd.DataFrame, numericas: List[str]) -> str:
+    partes = [f"{len(sub)} registros"]
+    for col in numericas:
+        serie = sub[col].dropna()
+        if serie.empty:
+            continue
+        partes.append(f"{col}: total {serie.sum():,.2f}, promedio {serie.mean():,.2f}")
+    return ", ".join(partes)
+
+
+def _desglose(
+    df: pd.DataFrame,
+    columna: str,
+    etiquetas: pd.Series,
+    numericas: List[str],
+    base: dict,
+    titulo: str,
+) -> List[Document]:
+    """
+    Un fragmento con el desglose de las métricas por cada valor de `columna`.
+
+    Es lo que permite responder "¿cuántas unidades de Monitor 27 se vendieron?"
+    o "¿qué región generó más ingresos?": ninguna fila suelta contiene esa suma.
+    """
+    grupos = list(df.groupby(etiquetas, sort=False))
+    if len(grupos) > MAX_CATEGORIAS:
+        conteos = etiquetas.value_counts().head(TOP_CATEGORIAS)
+        conservados = set(conteos.index)
+        grupos = [(k, v) for k, v in grupos if k in conservados]
+        nota = f" Se listan los {len(grupos)} valores más frecuentes de {columna}."
+    else:
+        nota = ""
+
+    if not grupos:
+        return []
+
+    documentos: List[Document] = []
+
+    # El ranking va en su propio fragmento, calculado sobre TODOS los grupos.
+    # Si viviera dentro del listado, al partirse en varios trozos el modelo
+    # podría deducir el máximo de una lista incompleta y acertar por poco.
+    comparativa = []
+    for col in numericas:
+        totales = {etiqueta: sub[col].dropna().sum() for etiqueta, sub in grupos}
+        totales = {k: v for k, v in totales.items() if pd.notna(v)}
+        if len(totales) < 2:
+            continue
+        mayor = max(totales, key=totales.__getitem__)
+        menor = min(totales, key=totales.__getitem__)
+        comparativa.append(
+            f"Mayor {col} por {columna}: {mayor} ({totales[mayor]:,.2f}). "
+            f"Menor {col} por {columna}: {menor} ({totales[menor]:,.2f})."
+        )
+
+    if comparativa:
+        documentos.append(
+            Document(
+                page_content=f"Comparativa de {columna} en {base['filename']}, "
+                f"sobre {len(grupos)} valores.{nota}\n" + "\n".join(comparativa),
+                metadata={**base, "unit": "breakdown", "page": 1, "locator": f"comparativa por {columna}"},
+            )
+        )
+
+    detalle = "\n".join(f"{etiqueta}: {_metricas(sub, numericas)}." for etiqueta, sub in grupos)
+    trozos = _splitter.split_text(detalle)
+
+    for i, trozo in enumerate(trozos, start=1):
+        encabezado = f"{titulo} en {base['filename']}.{nota}"
+        if len(trozos) > 1:
+            encabezado += (
+                f" Listado parcial, parte {i} de {len(trozos)}: no contiene todos los valores, "
+                f"por lo que no sirve para deducir máximos ni totales."
+            )
+        documentos.append(
+            Document(
+                page_content=f"{encabezado}\n{trozo}",
+                metadata={**base, "unit": "breakdown", "page": 1, "locator": f"desglose por {columna}"},
+            )
+        )
+
+    return documentos
+
+
+def _csv_breakdowns(df: pd.DataFrame, base: dict) -> List[Document]:
+    """Desgloses por cada columna categórica manejable y por mes si hay fechas."""
+    numericas = list(df.select_dtypes("number").columns)
+    if df.empty or not numericas:
+        return []
+
+    documentos: List[Document] = []
+    for columna in df.columns:
+        if columna in numericas:
+            continue
+        serie = df[columna]
+
+        if _es_fecha(serie):
+            fechas = pd.to_datetime(serie, errors="coerce", format="mixed")
+            if fechas.notna().sum() < 2:
+                continue
+            documentos += _desglose(
+                df, columna, fechas.dt.to_period("M").astype(str), numericas, base,
+                f"Desglose por mes según {columna}",
+            )
+            continue
+
+        distintos = serie.nunique(dropna=True)
+        # una columna con un valor por fila es un identificador: no agrupa nada
+        if distintos < 2 or distintos == len(df):
+            continue
+        documentos += _desglose(
+            df, columna, serie.astype(str), numericas, base, f"Desglose por {columna}"
+        )
+
+    return documentos
+
+
 def _csv_summary(df: pd.DataFrame, base: dict) -> Optional[Document]:
     """
     Documento sintético con los agregados del CSV.
@@ -105,7 +239,7 @@ def load_csv(
     doc_id: Optional[str] = None,
     filename: Optional[str] = None,
 ) -> List[Document]:
-    """Carga un CSV en bloques de filas, más un fragmento de agregados."""
+    """Carga un CSV en bloques de filas, más los agregados y desgloses calculados."""
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"No se encontró el archivo: {file_path}")
 
@@ -116,6 +250,7 @@ def load_csv(
     summary = _csv_summary(df, base)
     if summary is not None:
         chunks.append(summary)
+    chunks.extend(_csv_breakdowns(df, base))
 
     for start in range(0, len(df), CSV_ROWS_PER_CHUNK):
         block = df.iloc[start : start + CSV_ROWS_PER_CHUNK]

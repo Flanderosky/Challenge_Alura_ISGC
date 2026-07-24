@@ -203,6 +203,22 @@ export class LibraryDrawer {
     await this.loadPage(page);
   }
 
+  /**
+   * Muestra un fragmento calculado (resumen o desglose de un CSV).
+   * No existe literal en el archivo, así que abrirlo por página engañaría.
+   */
+  showDerived(hit) {
+    this.open();
+    this.showViewer();
+    this.viewer = { docId: hit.doc_id, page: 1, total: 1 };
+    this.title.textContent = hit.filename ?? 'fragmento';
+    this.viewerMeta.textContent = `Calculado a partir de ${hit.filename} · no aparece literal en el archivo`;
+    this.viewerPos.textContent = hit.locator ?? '';
+    this.viewerPage.innerHTML = `<mark>${escapar(hit.text)}</mark>`;
+    document.getElementById('page-prev').disabled = true;
+    document.getElementById('page-next').disabled = true;
+  }
+
   async loadPage(page) {
     try {
       const datos = await api.content(this.viewer.docId, page);
