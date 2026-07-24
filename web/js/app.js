@@ -32,6 +32,12 @@ const app = {
 const library = new LibraryDrawer({ onChange: (estado) => aplicarEstado(estado) });
 const flow = new Flow($('flow-svg'), {
   onDocumentClick: (docId) => library.openDocument(docId),
+  onDocumentHover: (docId, activo) => {
+    flow.highlightDocument(docId, activo);
+    for (const fila of document.querySelectorAll(`.source[data-doc="${docId}"]`)) {
+      fila.toggleAttribute('data-on', activo);
+    }
+  },
 });
 
 // ─────────────────────────────────────────────────────────── estado global
@@ -160,6 +166,9 @@ function pintarEvidencia(contenedor, hits) {
     fila.type = 'button';
     fila.className = 'source';
     fila.dataset.n = hit.n;
+    fila.dataset.doc = hit.doc_id;
+    fila.addEventListener('mouseenter', () => flow.highlightDocument(hit.doc_id, true));
+    fila.addEventListener('mouseleave', () => flow.highlightDocument(hit.doc_id, false));
     fila.innerHTML = `
       <span class="source-n">[${hit.n}]</span>
       <span class="source-where">${escapar(hit.filename ?? 'documento')} <em>${escapar(hit.locator ?? '')}</em></span>
@@ -216,6 +225,8 @@ async function enviar(pregunta) {
         case 'hits':
           app.hits = evento.hits;
           flow.setContributions(evento.contributions);
+          flow.setHits(evento.hits);
+          flow.pulseDocuments(evento.contributions);
           break;
 
         case 'token':
@@ -231,6 +242,7 @@ async function enviar(pregunta) {
           pintarEvidencia(agente.turno, app.hits);
           conectarCitas(agente.turno);
           volcarTelemetria(evento.timings);
+          pintarTimeline(evento.timings);
           $('flow-note').textContent = `Listo en ${formatoMs(evento.timings.total)}`;
           $('flow-note').dataset.live = 'false';
           app.history.push({ role: 'user', content: texto }, { role: 'assistant', content: respuesta });
@@ -276,6 +288,18 @@ const CLAVE_TELEMETRIA = { consulta: 'embedding', recuperacion: 'busqueda', mode
 
 function reiniciarTelemetria() {
   for (const dd of document.querySelectorAll('[data-tele]')) dd.textContent = '—';
+  for (const seg of document.querySelectorAll('.seg')) seg.style.width = '0%';
+}
+
+/** Las tres etapas medidas, a escala, sobre el ancho del panel. */
+function pintarTimeline(timings) {
+  const partes = ['embedding', 'busqueda', 'modelo'];
+  const total = partes.reduce((suma, clave) => suma + (timings[clave] ?? 0), 0);
+  if (!total) return;
+  for (const clave of partes) {
+    const seg = document.querySelector(`.seg[data-seg="${clave}"]`);
+    if (seg) seg.style.width = `${((timings[clave] ?? 0) / total) * 100}%`;
+  }
 }
 
 function fijarTelemetria(etapa, ms) {

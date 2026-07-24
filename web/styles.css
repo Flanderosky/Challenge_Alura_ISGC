@@ -43,11 +43,12 @@ body {
   font-family: var(--ui);
   color: var(--ink);
   background-color: var(--linen);
-  /* papel milimetrado del banco de trabajo */
+  /* grano de papel sobre el milimetrado del banco de trabajo */
   background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.11'/%3E%3C/svg%3E"),
     linear-gradient(rgba(20, 24, 27, 0.045) 1px, transparent 1px),
     linear-gradient(90deg, rgba(20, 24, 27, 0.045) 1px, transparent 1px);
-  background-size: 26px 26px;
+  background-size: 140px 140px, 26px 26px, 26px 26px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -166,6 +167,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 
 .panel {
+  position: relative;
   min-height: 0;
   display: flex;
   flex-direction: column;
@@ -173,6 +175,30 @@ button { font: inherit; color: inherit; cursor: pointer; }
   border: 1px solid var(--rule);
   border-radius: 2px;
   box-shadow: var(--lift);
+}
+
+/* marcas de corte: la hoja está montada sobre la mesa */
+.panel::before,
+.panel::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+}
+
+.panel::before {
+  top: -4px;
+  left: -4px;
+  border-top: 1px solid var(--rule);
+  border-left: 1px solid var(--rule);
+}
+
+.panel::after {
+  bottom: -4px;
+  right: -4px;
+  border-bottom: 1px solid var(--rule);
+  border-right: 1px solid var(--rule);
 }
 
 .panel-head {
@@ -204,12 +230,31 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* ── lienzo del recorrido ─────────────────────────────────────────────────── */
 
 .flow-stage {
+  position: relative;
   flex: 1;
   min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px;
+  padding: 20px 12px 8px;
+}
+
+/* regla milimetrada en el borde del lienzo */
+.flow-stage::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 9px;
+  background-image:
+    repeating-linear-gradient(90deg, var(--rule) 0 1px, transparent 1px 10px),
+    repeating-linear-gradient(90deg, var(--ink-soft) 0 1px, transparent 1px 50px);
+  background-size: 100% 4px, 100% 9px;
+  background-repeat: no-repeat;
+  background-position: 0 0, 0 0;
+  opacity: 0.45;
+  pointer-events: none;
 }
 
 #flow-svg { width: 100%; height: 100%; }
@@ -267,8 +312,52 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 .edge-label { font-family: var(--mono); font-size: 9.5px; fill: var(--ink-soft); }
 
-.flow-draw { stroke-dasharray: var(--len); stroke-dashoffset: var(--len); animation: draw 0.7s ease-out forwards; }
+/* al cargar, el diagrama se traza como si lo dibujara un plóter */
+.flow-draw {
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: var(--len);
+  animation: draw 0.65s ease-out var(--retraso, 0ms) forwards;
+}
+
 @keyframes draw { to { stroke-dashoffset: 0; } }
+
+.node-draw { animation: node-in 0.42s cubic-bezier(0.22, 0.8, 0.3, 1) var(--retraso, 0ms) both; }
+
+@keyframes node-in {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── paquetes: un cuadrado por fragmento que recorre la conexión ─────────── */
+
+.packet { fill: var(--plot); }
+.packet-marker { fill: var(--marker); stroke: rgba(20, 24, 27, 0.4); stroke-width: 0.6; }
+
+/* ── rejilla de fragmentos del índice ────────────────────────────────────── */
+
+.chunk-dot {
+  fill: var(--ink);
+  opacity: 0.15;
+  transition: opacity 0.18s, fill 0.18s;
+}
+
+.chunk-dot[data-focus] { opacity: 0.45; }
+
+.chunk-dot[data-hit='true'] {
+  fill: var(--marker);
+  opacity: 1;
+  animation: ignite 0.45s ease-out;
+}
+
+@keyframes ignite {
+  0% { opacity: 0.15; }
+  35% { opacity: 1; transform: scale(1.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.grid-chunks rect { transform-box: fill-box; transform-origin: center; }
+
+.node[data-hover='true'] .node-box { stroke: var(--ink); stroke-width: 1.8; }
 
 /* ── telemetría ───────────────────────────────────────────────────────────── */
 
@@ -305,6 +394,20 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 
 .tele-total dd { color: var(--plot); }
+
+/* los mismos milisegundos, ahora en proporción */
+.timeline {
+  flex: none;
+  display: flex;
+  height: 7px;
+  background: var(--rule-soft);
+  border-top: 1px solid var(--rule-soft);
+}
+
+.seg { width: 0; transition: width 0.4s cubic-bezier(0.22, 0.8, 0.3, 1); }
+.seg-embed { background: var(--ink); }
+.seg-search { background: var(--marker); }
+.seg-model { background: var(--plot); }
 
 /* ── hilo ─────────────────────────────────────────────────────────────────── */
 
