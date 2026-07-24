@@ -15,9 +15,9 @@ from src.agent import create_qa_chain, ask_question
 
 load_dotenv()
 
-st.set_page_config(page_title="Alura Agente", page_icon="🤖", layout="wide")
+st.set_page_config(page_title="Alura Agente", layout="wide")
 
-st.title("🤖 Alura Agente")
+st.title("Alura Agente")
 st.markdown(
     "Asistente de inteligencia artificial para responder preguntas sobre documentos internos (PDF o CSV)."
 )
@@ -27,7 +27,7 @@ DEFAULT_DOC = os.path.join("data", "ventas_ejemplo.csv")
 
 # Sidebar: carga de documento
 with st.sidebar:
-    st.header("📄 Documento fuente")
+    st.header("Documento fuente")
     uploaded_file = st.file_uploader(
         "Sube un archivo PDF o CSV", type=["pdf", "csv"]
     )
@@ -38,7 +38,7 @@ with st.sidebar:
         st.info(f"Usando documento por defecto: {DEFAULT_DOC}")
 
     st.divider()
-    st.markdown("### 💡 Ejemplos de preguntas")
+    st.markdown("### Ejemplos de preguntas")
     st.markdown("- ¿Cuál fue el producto más vendido en diciembre de 2015?")
     st.markdown("- ¿Cuál es la política de vacaciones de la empresa?")
     st.markdown("- Resume los puntos más importantes del documento.")
@@ -79,7 +79,7 @@ except Exception as e:
     st.error(f"Error al procesar el documento: {e}")
     st.stop()
 
-st.success("✅ Documento procesado correctamente. Haz una pregunta.")
+st.success("Documento procesado correctamente. Haz una pregunta.")
 
 # Área de preguntas
 question = st.text_input("Escribe tu pregunta aquí:", placeholder="¿Qué necesitas saber?")
@@ -92,9 +92,9 @@ if question:
             st.error(f"Error al generar la respuesta: {e}")
             st.stop()
 
-    st.markdown("### 📝 Respuesta")
+    st.markdown("### Respuesta")
     st.write(result["answer"])
 
-    with st.expander("📚 Ver contexto utilizado"):
+    with st.expander("Ver contexto utilizado"):
         for i, source in enumerate(result["sources"], 1):
             st.markdown(f"**Fragmento {i}:** {source}...")

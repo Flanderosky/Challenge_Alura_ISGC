@@ -6,13 +6,13 @@ Este proyecto fue desarrollado como desafío final del programa **Alura Agente**
 
 ---
 
-## 🎯 Objetivo
+##  Objetivo
 
 Facilitar el acceso a la información contenida en manuales, informes, políticas y hojas de cálculo internas, permitiendo que cualquier colaborador haga preguntas directas y reciba respuestas claras sin necesidad de abrir los archivos.
 
 ---
 
-## 🏗️ Arquitectura
+##  Arquitectura
 
 ```
 ┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
@@ -40,7 +40,7 @@ Facilitar el acceso a la información contenida en manuales, informes, política
 
 ---
 
-## 🛠️ Tecnologías y herramientas
+##  Tecnologías y herramientas
 
 - **Python 3.12**
 - **Streamlit** — interfaz web
@@ -56,7 +56,7 @@ Facilitar el acceso a la información contenida en manuales, informes, política
 
 ---
 
-## 📁 Estructura del repositorio
+##  Estructura del repositorio
 
 ```
 alura-agente/
@@ -79,7 +79,7 @@ alura-agente/
 
 ---
 
-## 🚀 Cómo ejecutar el proyecto
+##  Cómo ejecutar el proyecto
 
 ### 1. Clonar el repositorio
 
@@ -136,7 +136,7 @@ Abre tu navegador en `http://localhost:8501`.
 
 ---
 
-## 🐳 Ejecutar con Docker
+##  Ejecutar con Docker
 
 ```bash
 # Construir imagen
@@ -154,7 +154,7 @@ docker-compose up --build
 
 ---
 
-## ☁️ Despliegue en OCI Compute
+##  Despliegue en OCI Compute
 
 ### Paso a paso sugerido
 
@@ -217,7 +217,7 @@ http://<IP_PUBLICA>:8501
 
 ---
 
-## 💬 Ejemplos de preguntas que el agente puede responder
+##  Ejemplos de preguntas que el agente puede responder
 
 ### Con el CSV de ventas (`data/ventas_ejemplo.csv`)
 
@@ -233,7 +233,7 @@ http://<IP_PUBLICA>:8501
 
 ---
 
-## ✅ Ejemplos de respuestas generadas
+##  Ejemplos de respuestas generadas
 
 > **Pregunta:** ¿Cuál fue el producto más vendido en diciembre de 2015?
 >
@@ -257,7 +257,7 @@ pytest tests/
 
 ---
 
-## ☁️ Evidencia del deploy en OCI
+##  Evidencia del deploy en OCI
 
 La aplicación fue desplegada exitosamente en OCI Compute.
 
@@ -266,7 +266,7 @@ La aplicación fue desplegada exitosamente en OCI Compute.
 
 ---
 
-## ⚠️ Notas importantes
+##  Notas importantes
 
 - **Nunca subas tu archivo `.env` con claves reales** al repositorio; está incluido en `.gitignore`.
 - El proyecto usa un modelo de embeddings local, por lo que no requiere conexión a internet para indexar documentos.
@@ -275,12 +275,12 @@ La aplicación fue desplegada exitosamente en OCI Compute.
 
 ---
 
-## 📄 Licencia
+##  Licencia
 
 Este proyecto es de uso educativo para el desafío final de Alura.
 
 ---
 
-## 🙋 Autor
+##  Autor
 
 Desarrollado por **[Tu nombre]** como parte del desafío final **Alura Agente**.

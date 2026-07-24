@@ -8,6 +8,7 @@ pypdf>=4.0.0
 pandas>=2.0.0
 faiss-cpu>=1.7.4
 langchain-huggingface>=0.0.1
+sentence-transformers>=2.2.2
 cohere>=5.0.0
 python-dotenv>=1.0.0
 requests>=2.31.0
