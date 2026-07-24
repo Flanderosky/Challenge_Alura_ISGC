@@ -1,10 +1,11 @@
 """
-Aplicación principal del Alura Agente.
-Interfaz web futurista con chatbot integrado para consultar documentos.
+Aplicacion principal del Alura Agente.
+Vista de flujo tipo n8n: nodos interactivos del pipeline RAG + chat lateral.
 """
 
 import os
 import tempfile
+import time
 
 import streamlit as st
 from dotenv import load_dotenv
@@ -16,118 +17,179 @@ from src.agent import create_qa_chain, ask_question
 load_dotenv()
 
 st.set_page_config(
-    page_title="Alura Agente | Consulta Inteligente de Documentos",
+    page_title="Alura Agente | Pipeline RAG",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
 
-DEFAULT_DOC = os.path.join("data", "ventas_ejemplo.pdf")
+DEFAULT_DOC = os.path.join("data", "politicas_ejemplo.pdf")
 
 CUSTOM_CSS = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
 }
 
-h1, h2, h3, .orbitron {
-    font-family: 'Orbitron', sans-serif;
+/* Contenedor principal */
+.main .block-container {
+    padding: 1rem 2rem;
+    max-width: 100%;
 }
 
-.hero {
+/* Nodos estilo n8n */
+.node-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 1rem 0;
+}
+
+.node {
+    background: #1e1e2e;
+    border: 2px solid #3d3d5c;
+    border-radius: 12px;
+    padding: 0.8rem 1.2rem;
+    min-width: 180px;
     text-align: center;
-    padding: 4rem 1rem 3rem 1rem;
-    background: radial-gradient(circle at top center, #1a1a2e 0%, #0a0a12 70%);
-    border-bottom: 1px solid #222;
+    color: #e0e0e8;
+    font-size: 0.9rem;
+    font-weight: 500;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
 }
 
-.hero h1 {
-    font-size: 3.2rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 0.5rem;
-    letter-spacing: -1px;
+.node-icon {
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
 }
 
-.hero .gradient-text {
-    background: linear-gradient(90deg, #00d4ff, #7b2cbf);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.hero p {
-    font-size: 1.2rem;
-    color: #a0a0b0;
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-.card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    padding: 1.5rem;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.card:hover {
-    transform: translateY(-4px);
-    border-color: #00d4ff;
-}
-
-.card h4 {
-    color: #00d4ff;
-    margin-bottom: 0.5rem;
-}
-
-.card p {
-    color: #c0c0d0;
-    font-size: 0.95rem;
-    margin: 0;
-}
-
-.section-title {
-    font-size: 1.8rem;
-    color: #ffffff;
-    margin-bottom: 1rem;
-    border-left: 4px solid #00d4ff;
-    padding-left: 1rem;
-}
-
-.chat-welcome {
-    background: rgba(0, 212, 255, 0.08);
-    border-left: 3px solid #00d4ff;
-    padding: 1rem;
-    border-radius: 0 12px 12px 0;
-    margin-bottom: 1rem;
-}
-
-.footer {
-    text-align: center;
-    padding: 2rem 1rem;
-    color: #666;
-    font-size: 0.85rem;
-    border-top: 1px solid #1a1a2e;
-    margin-top: 3rem;
-}
-
-.stButton button {
-    background: linear-gradient(90deg, #00d4ff, #7b2cbf);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 0.6rem 1.5rem;
+.node-title {
     font-weight: 600;
+    margin-bottom: 0.2rem;
 }
 
-.stButton button:hover {
-    opacity: 0.9;
+.node-desc {
+    font-size: 0.75rem;
+    color: #9090a0;
+}
+
+.node.active {
+    border-color: #00d4ff;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+    background: #1a2a3a;
+}
+
+.node.success {
+    border-color: #00d68f;
+    box-shadow: 0 0 20px rgba(0, 214, 143, 0.3);
+    background: #1a3a2e;
+}
+
+.connector {
+    width: 2px;
+    height: 24px;
+    background: #3d3d5c;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.connector.active {
+    background: linear-gradient(180deg, #00d4ff, #00d68f);
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+.flow-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #2a2a3e;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 1rem;
+}
+
+.status-badge.idle {
+    background: #2a2a3e;
+    color: #9090a0;
+}
+
+.status-badge.processing {
+    background: rgba(0, 212, 255, 0.15);
+    color: #00d4ff;
+}
+
+.status-badge.ready {
+    background: rgba(0, 214, 143, 0.15);
+    color: #00d68f;
+}
+
+/* Panel derecho */
+.chat-panel {
+    background: #13131f;
+    border-radius: 16px;
+    border: 1px solid #2a2a3e;
+    padding: 1.5rem;
+    height: calc(100vh - 120px);
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #2a2a3e;
+}
+
+.info-card {
+    background: #1e1e2e;
+    border: 1px solid #2a2a3e;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.info-card h4 {
+    color: #00d4ff;
+    margin: 0 0 0.5rem 0;
+    font-size: 0.95rem;
+}
+
+.info-card p {
+    color: #a0a0b0;
+    margin: 0;
+    font-size: 0.85rem;
 }
 </style>
 """
 
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+
+
+# Nodos del flujo RAG
+FLOW_NODES = [
+    {"id": "input", "title": "Entrada", "desc": "Pregunta del usuario", "icon": "?"},
+    {"id": "retriever", "title": "Retriever", "desc": "Busqueda semantica", "icon": "O"},
+    {"id": "vectorstore", "title": "Vector Store", "desc": "FAISS + embeddings", "icon": "#"},
+    {"id": "llm", "title": "LLM", "desc": "Gemini genera respuesta", "icon": "IA"},
+    {"id": "output", "title": "Salida", "desc": "Respuesta final", "icon": ">>"},
+]
 
 
 @st.cache_resource(show_spinner="Indexando documentos...")
@@ -151,7 +213,41 @@ def get_document_path():
     return None
 
 
-# Sidebar con carga de documentos
+def render_node(node, state="idle"):
+    """Renderiza un nodo individual."""
+    active_class = "active" if state == "active" else "success" if state == "success" else ""
+    return f"""
+    <div class="node {active_class}">
+        <div class="node-title">{node['icon']} {node['title']}</div>
+        <div class="node-desc">{node['desc']}</div>
+    </div>
+    """
+
+
+def render_flow(active_node=None, completed_nodes=None):
+    """Renderiza el diagrama completo de nodos."""
+    completed_nodes = completed_nodes or []
+    html = '<div class="node-container">'
+
+    for i, node in enumerate(FLOW_NODES):
+        if node["id"] == active_node:
+            state = "active"
+        elif node["id"] in completed_nodes:
+            state = "success"
+        else:
+            state = "idle"
+
+        html += render_node(node, state)
+
+        if i < len(FLOW_NODES) - 1:
+            connector_active = "active" if node["id"] in completed_nodes else ""
+            html += f'<div class="connector {connector_active}"></div>'
+
+    html += '</div>'
+    return html
+
+
+# Sidebar
 with st.sidebar:
     st.header("Configuracion")
     st.markdown("Carga un documento PDF o CSV para personalizar el agente.")
@@ -164,132 +260,143 @@ with st.sidebar:
     elif os.path.exists(DEFAULT_DOC):
         st.info(f"Documento por defecto: {DEFAULT_DOC}")
 
-    st.divider()
-    st.markdown("### Proveedores de IA soportados")
-    st.markdown("- Google Gemini")
-    st.markdown("- Cohere")
-    st.markdown("- OpenAI")
 
-
-# Hero section
+# Header
 st.markdown("""
-<div class="hero">
-    <h1>Alura <span class="gradient-text">Agente</span></h1>
-    <p>Consulta documentos internos de tu empresa con inteligencia artificial. 
-    Politicas, manuales, reportes y hojas de calculo resumidos en segundos.</p>
-</div>
+<h1 style="color: white; margin-bottom: 0.2rem;">Alura Agente</h1>
+<p style="color: #9090a0; margin-top: 0;">Pipeline RAG visual: consulta documentos y observa como fluye la informacion</p>
 """, unsafe_allow_html=True)
 
 
-# Seccion de capacidades
-st.markdown("<div class='section-title'>Que puedes consultar</div>", unsafe_allow_html=True)
+# Layout principal
+col_flow, col_chat = st.columns([1, 1])
 
-col1, col2, col3 = st.columns(3)
-with col1:
+# Columna izquierda: flujo de nodos
+with col_flow:
+    st.markdown('<div class="flow-title">Pipeline de procesamiento</div>', unsafe_allow_html=True)
+
+    flow_placeholder = st.empty()
+    status_placeholder = st.empty()
+
+    # Render inicial
+    flow_placeholder.markdown(render_flow(), unsafe_allow_html=True)
+    status_placeholder.markdown(
+        '<div class="status-badge idle">Esperando pregunta...</div>',
+        unsafe_allow_html=True
+    )
+
+    # Info del documento
     st.markdown("""
-    <div class="card">
-        <h4>Politicas internas</h4>
-        <p>Vacaciones, horarios, codigos de conducta y beneficios del equipo.</p>
+    <div class="info-card">
+        <h4>Documento cargado</h4>
+        <p>Manual de Politicas Internas - AluraTech</p>
     </div>
     """, unsafe_allow_html=True)
 
-with col2:
     st.markdown("""
-    <div class="card">
-        <h4>Datos de ventas</h4>
-        <p>Productos mas vendidos, ingresos por region y tendencias mensuales.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col3:
-    st.markdown("""
-    <div class="card">
-        <h4>Documentacion tecnica</h4>
-        <p>Lenguajes, herramientas, arquitectura y procesos del equipo de tecnologia.</p>
+    <div class="info-card">
+        <h4>Como funciona</h4>
+        <p>1. Escribe una pregunta en el chat.<br>
+        2. El retriever busca los fragmentos mas relevantes.<br>
+        3. El vector store recupera el contexto.<br>
+        4. Gemini genera una respuesta basada en el documento.</p>
     </div>
     """, unsafe_allow_html=True)
 
 
-# Seccion de documentacion / fuentes
-st.markdown("<div class='section-title'>Documentacion disponible</div>", unsafe_allow_html=True)
+# Columna derecha: chat
+with col_chat:
+    st.markdown('<div class="chat-panel">', unsafe_allow_html=True)
+    st.markdown('<div class="chat-header">Chat con el agente</div>', unsafe_allow_html=True)
 
-st.markdown("""
-<div class="card">
-    <h4>Manual de Politicas Internas - AluraTech</h4>
-    <p>Contiene informacion sobre vacaciones, horario laboral, tecnologias utilizadas y codigo de conducta.</p>
-</div>
-""", unsafe_allow_html=True)
+    if "messages" not in st.session_state:
+        st.session_state.messages = [
+            {
+                "role": "assistant",
+                "content": "Hola. Soy tu asistente de documentos. Escribe una pregunta sobre politicas, ventas o tecnologia y observa como se procesa en el pipeline.",
+            }
+        ]
 
-st.markdown("""
-<div class="card" style="margin-top: 1rem;">
-    <h4>Reporte de Ventas - Diciembre 2015</h4>
-    <p>Registro de productos vendidos, categorias, regiones y montos de ingreso.</p>
-</div>
-""", unsafe_allow_html=True)
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
+    doc_path = get_document_path()
 
-# Chatbot
-st.markdown("<div class='section-title'>Habla con el agente</div>", unsafe_allow_html=True)
+    if doc_path is None:
+        st.warning("Sube un documento PDF o CSV desde la barra lateral.")
+    else:
+        try:
+            qa_chain = build_qa_chain(doc_path)
+        except ValueError as e:
+            st.error(f"Error al configurar el modelo: {e}")
+            st.stop()
+        except Exception as e:
+            st.error(f"Error al procesar el documento: {e}")
+            st.stop()
 
-# Inicializar historial de chat
-if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {
-            "role": "assistant",
-            "content": "Hola, soy tu asistente virtual. Puedo ayudarte a consultar documentos internos de la empresa. Escribe una pregunta sobre politicas, ventas o tecnologia y te respondo con base en la documentacion.",
-        }
-    ]
+        if question := st.chat_input("Escribe tu pregunta aqui..."):
+            st.session_state.messages.append({"role": "user", "content": question})
 
-# Mostrar mensajes
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+            with st.chat_message("user"):
+                st.markdown(question)
 
-# Procesar documento
-doc_path = get_document_path()
+            # Animacion del flujo
+            status_placeholder.markdown(
+                '<div class="status-badge processing">Procesando pregunta...</div>',
+                unsafe_allow_html=True
+            )
 
-if doc_path is None:
-    st.warning("Por favor sube un documento PDF o CSV para comenzar.")
-else:
-    try:
-        qa_chain = build_qa_chain(doc_path)
-    except ValueError as e:
-        st.error(f"Error al configurar el modelo: {e}")
-        st.stop()
-    except Exception as e:
-        st.error(f"Error al procesar el documento: {e}")
-        st.stop()
+            completed = []
 
-    # Input de chat
-    if question := st.chat_input("Escribe tu pregunta aqui..."):
-        st.session_state.messages.append({"role": "user", "content": question})
+            # Paso 1: Entrada activa
+            flow_placeholder.markdown(render_flow(active_node="input", completed_nodes=completed), unsafe_allow_html=True)
+            time.sleep(0.4)
+            completed.append("input")
 
-        with st.chat_message("user"):
-            st.markdown(question)
+            # Paso 2: Retriever
+            flow_placeholder.markdown(render_flow(active_node="retriever", completed_nodes=completed), unsafe_allow_html=True)
+            time.sleep(0.6)
+            completed.append("retriever")
 
-        with st.chat_message("assistant"):
-            with st.spinner("Analizando documentos..."):
+            # Paso 3: Vector Store
+            flow_placeholder.markdown(render_flow(active_node="vectorstore", completed_nodes=completed), unsafe_allow_html=True)
+            time.sleep(0.6)
+            completed.append("vectorstore")
+
+            # Paso 4: LLM
+            flow_placeholder.markdown(render_flow(active_node="llm", completed_nodes=completed), unsafe_allow_html=True)
+
+            with st.chat_message("assistant"):
                 try:
                     result = ask_question(qa_chain, question)
                     answer = result["answer"]
                     sources = result["sources"]
                 except Exception as e:
                     st.error(f"Error al generar la respuesta: {e}")
+                    flow_placeholder.markdown(render_flow(), unsafe_allow_html=True)
+                    status_placeholder.markdown(
+                        '<div class="status-badge idle">Error en el pipeline</div>',
+                        unsafe_allow_html=True
+                    )
                     st.stop()
 
-            st.markdown(answer)
+                st.markdown(answer)
 
-            if sources:
-                with st.expander("Ver fuentes consultadas"):
-                    for i, source in enumerate(sources, 1):
-                        st.markdown(f"**Fuente {i}:** {source}...")
+                if sources:
+                    with st.expander("Ver fuentes consultadas"):
+                        for i, source in enumerate(sources, 1):
+                            st.markdown(f"**Fuente {i}:** {source}...")
 
-        st.session_state.messages.append({"role": "assistant", "content": answer})
+            # Paso 5: Salida completada
+            completed.append("llm")
+            completed.append("output")
+            flow_placeholder.markdown(render_flow(completed_nodes=completed), unsafe_allow_html=True)
+            status_placeholder.markdown(
+                '<div class="status-badge ready">Respuesta generada</div>',
+                unsafe_allow_html=True
+            )
 
+            st.session_state.messages.append({"role": "assistant", "content": answer})
 
-# Footer
-st.markdown("""
-<div class="footer">
-    Alura Agente - Desafio final Alura | Desplegado en Oracle Cloud Infrastructure
-</div>
-""", unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
