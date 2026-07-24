@@ -107,7 +107,7 @@ Edita `.env` con tu proveedor y clave de API:
 ```env
 LLM_PROVIDER=gemini
 GOOGLE_API_KEY=tu_google_api_key
-GOOGLE_MODEL=gemini-1.5-flash-latest
+GOOGLE_MODEL=gemini-3.1-flash-lite
 ```
 
 También puedes usar Cohere u OpenAI:
