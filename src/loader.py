@@ -136,6 +136,23 @@ def _desglose(
             f"Menor {col} por {columna}: {menor} ({totales[menor]:,.2f})."
         )
 
+    detalle = "\n".join(f"{etiqueta}: {_metricas(sub, numericas)}." for etiqueta, sub in grupos)
+    trozos = _splitter.split_text(detalle)
+
+    # Si el listado entero cabe en un fragmento, ranking y detalle van juntos:
+    # separarlos duplicaría fragmentos casi idénticos que compiten entre sí en
+    # la búsqueda y desplazan al contenido real de la biblioteca.
+    if len(trozos) <= 1:
+        cuerpo = [f"{titulo} en {base['filename']}.{nota}"]
+        cuerpo += comparativa
+        cuerpo += trozos
+        return [
+            Document(
+                page_content="\n".join(cuerpo),
+                metadata={**base, "unit": "breakdown", "page": 1, "locator": f"desglose por {columna}"},
+            )
+        ]
+
     if comparativa:
         documentos.append(
             Document(
@@ -145,16 +162,12 @@ def _desglose(
             )
         )
 
-    detalle = "\n".join(f"{etiqueta}: {_metricas(sub, numericas)}." for etiqueta, sub in grupos)
-    trozos = _splitter.split_text(detalle)
-
     for i, trozo in enumerate(trozos, start=1):
-        encabezado = f"{titulo} en {base['filename']}.{nota}"
-        if len(trozos) > 1:
-            encabezado += (
-                f" Listado parcial, parte {i} de {len(trozos)}: no contiene todos los valores, "
-                f"por lo que no sirve para deducir máximos ni totales."
-            )
+        encabezado = (
+            f"{titulo} en {base['filename']}.{nota}"
+            f" Listado parcial, parte {i} de {len(trozos)}: no contiene todos los valores, "
+            f"por lo que no sirve para deducir máximos ni totales."
+        )
         documentos.append(
             Document(
                 page_content=f"{encabezado}\n{trozo}",
@@ -210,16 +223,19 @@ def _csv_summary(df: pd.DataFrame, base: dict) -> Optional[Document]:
         return None
 
     lines = [
-        f"Resumen del archivo {base['filename']}.",
+        f"Resumen general y totales del archivo {base['filename']}.",
         f"Contiene {len(df)} registros y {len(df.columns)} columnas: {', '.join(map(str, df.columns))}.",
     ]
     for column in numeric.columns:
         serie = numeric[column].dropna()
         if serie.empty:
             continue
+        # el "total general de X" explícito es lo que engancha la pregunta
+        # "¿cuál fue el total de X?", que no coincide con ninguna fila
         lines.append(
-            f"Columna {column}: total {serie.sum():,.2f}, promedio {serie.mean():,.2f}, "
-            f"mínimo {serie.min():,.2f}, máximo {serie.max():,.2f}."
+            f"Total general de {column}, sumando todos los registros: {serie.sum():,.2f}. "
+            f"Promedio de {column}: {serie.mean():,.2f}. "
+            f"Mínimo: {serie.min():,.2f}. Máximo: {serie.max():,.2f}."
         )
     for column in (c for c in df.columns if c not in numeric.columns):
         top = df[column].value_counts().head(3)

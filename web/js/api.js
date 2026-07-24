@@ -2,20 +2,40 @@
 
 async function json(response) {
   const cuerpo = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(cuerpo.detail || `Error ${response.status}`);
+  if (!response.ok) {
+    const error = new Error(cuerpo.detail || `Error ${response.status}`);
+    // la interfaz distingue un token caducado de un fallo cualquiera
+    error.status = response.status;
+    throw error;
+  }
   return cuerpo;
 }
+
+// Token de administración. Vive en el navegador, nunca viaja en la URL.
+const TOKEN_KEY = 'alura_admin_token';
+
+export const token = {
+  get: () => localStorage.getItem(TOKEN_KEY) || '',
+  set: (valor) => localStorage.setItem(TOKEN_KEY, valor.trim()),
+  clear: () => localStorage.removeItem(TOKEN_KEY),
+};
+
+const authHeaders = () => (token.get() ? { 'X-Alura-Token': token.get() } : {});
 
 export const api = {
   state: () => fetch('/api/state').then(json),
 
+  checkToken: () => fetch('/api/admin/check', { headers: authHeaders() }).then(json),
+
   addDocument(file) {
     const cuerpo = new FormData();
     cuerpo.append('file', file);
-    return fetch('/api/documents', { method: 'POST', body: cuerpo }).then(json);
+    // sin Content-Type: el navegador debe poner el boundary del multipart
+    return fetch('/api/documents', { method: 'POST', body: cuerpo, headers: authHeaders() }).then(json);
   },
 
-  removeDocument: (id) => fetch(`/api/documents/${id}`, { method: 'DELETE' }).then(json),
+  removeDocument: (id) =>
+    fetch(`/api/documents/${id}`, { method: 'DELETE', headers: authHeaders() }).then(json),
 
   content: (id, page) =>
     fetch(`/api/documents/${id}/content${page ? `?page=${page}` : ''}`).then(json),

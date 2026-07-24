@@ -32,6 +32,10 @@ class LibraryError(Exception):
 class Library:
     def __init__(self) -> None:
         self._lock = threading.RLock()
+        # Lock aparte y a propósito: serializa las reconstrucciones sin tocar
+        # `_lock`, que protege lecturas rápidas como state() y vector_store.
+        # Usar el mismo dejaría /api/state colgado durante toda la indexación.
+        self._build_lock = threading.Lock()
         self._documents: Dict[str, dict] = {}
         self._chunks: Dict[str, List[Document]] = {}
         self._vector_store = None
@@ -84,6 +88,10 @@ class Library:
 
     def build_index(self) -> None:
         """Reconstruye el índice completo. Bloqueante; llamar en segundo plano."""
+        with self._build_lock:
+            self._build_index_locked()
+
+    def _build_index_locked(self) -> None:
         with self._lock:
             documentos = list(self._documents.values())
             if not documentos:

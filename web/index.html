@@ -106,6 +106,19 @@
 
   <!-- vista: lista -->
   <div class="drawer-body" id="view-library">
+    <div class="readonly-note" id="readonly-note" hidden>
+      <p class="readonly-lead">Modo lectura</p>
+      <p class="readonly-help">Puedes consultar y abrir los documentos. Agregar o quitar requiere el token de administración.</p>
+      <form class="admin-form" id="admin-form">
+        <input type="password" id="admin-token" placeholder="Token de administración" autocomplete="off" aria-label="Token de administración" />
+        <button type="submit" class="btn-ghost">Entrar</button>
+      </form>
+    </div>
+
+    <p class="admin-note" id="admin-note" hidden>
+      Modo administración activo · <button type="button" class="btn-link" id="admin-exit">salir</button>
+    </p>
+
     <label class="dropzone" id="dropzone">
       <input type="file" id="file-input" accept=".pdf,.csv" hidden />
       <span class="dropzone-lead">Agregar documento</span>

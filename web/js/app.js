@@ -58,6 +58,8 @@ function aplicarEstado(estado) {
     documents: estado.documents.length,
   });
   flow.setModel(estado.model ?? '—');
+  // el modo de acceso decide si cada fila lleva botón de quitar
+  library.setAccess({ protegido: !!estado.write_protected });
   library.setDocuments(estado.documents);
 
   pintarSugerencias();
@@ -87,7 +89,10 @@ function pintarSugerencias() {
   const sugerencias = [];
 
   if (nombres.some((n) => n.includes('politica'))) {
-    sugerencias.push('¿Cuántos días de vacaciones corresponden por año?', '¿Qué dice la política de trabajo remoto?');
+    sugerencias.push(
+      '¿Cuántos días de vacaciones corresponden por año?',
+      '¿Qué tecnologías se usan en el back-end?',
+    );
   }
   if (nombres.some((n) => n.includes('venta'))) {
     sugerencias.push('¿Cuál fue el total de ventas y el producto más vendido?');

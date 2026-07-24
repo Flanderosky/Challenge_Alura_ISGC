@@ -1,0 +1,32 @@
+# Sin este archivo, `COPY . .` mete el venv entero en la imagen y hornea el
+# .env con la clave de la API en una capa, visible con `docker history`.
+
+# Entornos y caché de Python
+venv/
+.venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Secretos y control de versiones
+.env
+.env.*
+!.env.example
+.git/
+.gitignore
+
+# Documentos subidos: viven en el volumen, no en la imagen.
+# Ojo: data/politicas_ejemplo.pdf y data/ventas_ejemplo.csv SÍ deben entrar,
+# porque la biblioteca los siembra al arrancar.
+data/uploads/
+
+# Desarrollo y documentación
+tests/
+docs/
+*.md
+.vscode/
+.idea/
+*.log
+*.tmp
+*.tar

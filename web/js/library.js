@@ -1,7 +1,7 @@
 // Cajón de la biblioteca: lista de documentos, alta, baja y visor con la
 // evidencia resaltada sobre el texto original.
 
-import { api } from './api.js';
+import { api, token } from './api.js';
 
 const PESO = (bytes) =>
   bytes >= 1024 * 1024 ? `${(bytes / (1024 * 1024)).toFixed(1)} MB` : `${Math.round(bytes / 1024)} KB`;
@@ -14,6 +14,7 @@ export class LibraryDrawer {
     this.onChange = onChange;
     this.documents = [];
     this.abierto = false;
+    this.protegido = false;
 
     this.drawer = document.getElementById('drawer');
     this.scrim = document.getElementById('scrim');
@@ -28,6 +29,10 @@ export class LibraryDrawer {
     this.viewerMeta = document.getElementById('viewer-meta');
     this.viewerPage = document.getElementById('viewer-page');
     this.viewerPos = document.getElementById('viewer-pos');
+    this.readonlyNote = document.getElementById('readonly-note');
+    this.adminNote = document.getElementById('admin-note');
+    this.adminForm = document.getElementById('admin-form');
+    this.adminInput = document.getElementById('admin-token');
 
     this.bind();
   }
@@ -67,6 +72,62 @@ export class LibraryDrawer {
 
     document.getElementById('page-prev').addEventListener('click', () => this.turnPage(-1));
     document.getElementById('page-next').addEventListener('click', () => this.turnPage(1));
+
+    this.adminForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      this.entrarComoAdmin(this.adminInput.value);
+    });
+
+    document.getElementById('admin-exit').addEventListener('click', () => {
+      token.clear();
+      this.aplicarAcceso();
+    });
+  }
+
+  // ---------------------------------------------------------------- acceso
+
+  puedeEscribir() {
+    return !this.protegido || !!token.get();
+  }
+
+  /** Ajusta la interfaz al modo en que corre el servidor. */
+  setAccess({ protegido }) {
+    this.protegido = protegido;
+    this.aplicarAcceso();
+  }
+
+  aplicarAcceso() {
+    const puede = this.puedeEscribir();
+    this.dropzone.hidden = !puede;
+    this.readonlyNote.hidden = puede;
+    this.adminNote.hidden = !(this.protegido && puede);
+    // los botones "Quitar" solo existen si de verdad se puede quitar
+    this.setDocuments(this.documents);
+  }
+
+  async entrarComoAdmin(valor) {
+    const limpio = (valor || '').trim();
+    if (!limpio) return;
+
+    this.error(null);
+    token.set(limpio);
+    try {
+      // se comprueba de inmediato: nada de "parece que entré"
+      await api.checkToken();
+      this.adminInput.value = '';
+      this.aplicarAcceso();
+    } catch (e) {
+      token.clear();
+      this.aplicarAcceso();
+      this.error(e.status === 401 ? 'Ese token no es válido.' : e.message);
+    }
+  }
+
+  /** Un token que dejó de servir se descarta y se vuelve a pedir. */
+  manejarNoAutorizado() {
+    token.clear();
+    this.aplicarAcceso();
+    this.error('Tu token dejó de ser válido. Vuelve a introducirlo.');
   }
 
   // ------------------------------------------------------------------ cajón
@@ -135,12 +196,16 @@ export class LibraryDrawer {
       } · ${PESO(doc.bytes)}</div>`;
       principal.addEventListener('click', () => this.openDocument(doc.id));
 
-      const quitar = document.createElement('button');
-      quitar.className = 'btn-remove';
-      quitar.textContent = 'Quitar';
-      quitar.addEventListener('click', () => this.remove(doc, quitar));
+      fila.append(tipo, principal);
 
-      fila.append(tipo, principal, quitar);
+      if (this.puedeEscribir()) {
+        const quitar = document.createElement('button');
+        quitar.className = 'btn-remove';
+        quitar.textContent = 'Quitar';
+        quitar.addEventListener('click', () => this.remove(doc, quitar));
+        fila.append(quitar);
+      }
+
       this.list.append(fila);
     }
   }
@@ -156,7 +221,8 @@ export class LibraryDrawer {
       const respuesta = await api.addDocument(archivo);
       this.onChange(respuesta.state);
     } catch (e) {
-      this.error(e.message);
+      if (e.status === 401) this.manejarNoAutorizado();
+      else this.error(e.message);
     } finally {
       this.dropzone.dataset.busy = 'false';
       lead.textContent = original;
@@ -182,6 +248,10 @@ export class LibraryDrawer {
       const respuesta = await api.removeDocument(doc.id);
       this.onChange(respuesta.state);
     } catch (e) {
+      if (e.status === 401) {
+        this.manejarNoAutorizado();
+        return;
+      }
       this.error(e.message);
       boton.disabled = false;
       boton.textContent = 'Quitar';

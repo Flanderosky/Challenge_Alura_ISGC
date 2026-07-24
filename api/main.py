@@ -10,35 +10,22 @@ import json
 import os
 import threading
 import time
-from typing import Iterator, List, Optional
+from contextlib import asynccontextmanager
+from typing import AsyncIterator, Iterator, List, Optional
 
-from fastapi import FastAPI, File, HTTPException, UploadFile
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Depends, FastAPI, File, HTTPException, UploadFile
+from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+from api.auth import require_write_token, write_protected
 from api.store import LibraryError, library
 from src.agent import build_prompt, get_llm, model_name, stream_answer
 from src.vectorstore import embed_query, search_by_vector
 
 WEB_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "web")
 TOP_K = 6
-
-app = FastAPI(title="Alura · agente documental", version="2.0.0")
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
-@app.on_event("startup")
-def _startup() -> None:
-    library.build_index_async()
-    threading.Thread(target=_warmup_llm, daemon=True).start()
-
 
 def _warmup_llm() -> None:
     """
@@ -51,6 +38,19 @@ def _warmup_llm() -> None:
         get_llm()
     except Exception:
         pass  # sin clave configurada: el error se reporta al consultar
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    """El índice y el cliente del modelo se calientan en segundo plano."""
+    library.build_index_async()
+    threading.Thread(target=_warmup_llm, daemon=True).start()
+    yield
+
+
+# Sin CORS a propósito: el front se sirve desde este mismo origen con rutas
+# relativas, así que ninguna petición es cross-origin.
+app = FastAPI(title="Alura · agente documental", version="2.1.0", lifespan=lifespan)
 
 
 class Turn(BaseModel):
@@ -73,25 +73,36 @@ def get_state() -> dict:
     estado["model"] = model_name()
     estado["provider"] = os.getenv("LLM_PROVIDER", "gemini")
     estado["top_k"] = TOP_K
+    # booleano, nunca el token: el front necesita saber qué dibujar
+    estado["write_protected"] = write_protected()
     return estado
 
 
 # ---------------------------------------------------------------- documentos
 
 
-@app.post("/api/documents")
+@app.get("/api/admin/check", dependencies=[Depends(require_write_token)])
+def admin_check() -> dict:
+    """Comprueba un token recién introducido, para no fingir que se entró."""
+    return {"ok": True}
+
+
+@app.post("/api/documents", dependencies=[Depends(require_write_token)])
 async def add_document(file: UploadFile = File(...)) -> dict:
     contenido = await file.read()
     try:
-        registro = library.add(file.filename or "documento", contenido)
+        # escribir en disco e indexar son bloqueantes: fuera del event loop,
+        # o el servidor entero deja de responder mientras se indexa
+        registro = await run_in_threadpool(library.add, file.filename or "documento", contenido)
     except LibraryError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
-    library.build_index()
+    await run_in_threadpool(library.build_index)
     return {"document": registro, "state": get_state()}
 
 
-@app.delete("/api/documents/{doc_id}")
+@app.delete("/api/documents/{doc_id}", dependencies=[Depends(require_write_token)])
 def delete_document(doc_id: str) -> dict:
+    # este endpoint es `def`, así que FastAPI ya lo ejecuta en el threadpool
     try:
         library.remove(doc_id)
     except LibraryError as exc:

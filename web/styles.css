@@ -692,6 +692,65 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .dropzone-lead { font-size: 14px; font-weight: 600; }
 .dropzone-help { font-size: 12.5px; color: var(--ink-soft); }
 
+/* aviso de modo lectura: explica por qué no se puede subir, en vez de
+   presentar un botón que falla */
+.readonly-note {
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--marker);
+  border-radius: 2px;
+  background: var(--sheet-alt);
+}
+
+.readonly-lead {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.readonly-help {
+  margin: 0 0 12px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.admin-form { display: flex; gap: 8px; }
+
+.admin-form input {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  background: var(--sheet);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink);
+}
+
+.admin-form input:focus { border-color: var(--plot); outline: none; }
+
+.admin-note {
+  margin: 0 0 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--done);
+}
+
+.btn-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--ink-soft);
+  text-decoration: underline;
+}
+
+.btn-link:hover { color: var(--ink); }
+
 .drawer-msg {
   margin: 0 0 14px;
   padding: 9px 11px;

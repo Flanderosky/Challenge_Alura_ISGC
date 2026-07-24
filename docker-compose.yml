@@ -3,9 +3,13 @@ services:
     build: .
     container_name: alura-agente
     ports:
-      - "8000:8000"
+      # El contenedor escucha en 8000. En OCI se publica en el 8501, que ya
+      # está abierto en la Security List, así que no hay que tocar la red.
+      - "${HOST_PORT:-8000}:8000"
     env_file:
       - .env
     volumes:
+      # Ojo: este montaje tapa el data/ de la imagen. El directorio del host
+      # debe contener los documentos de ejemplo o la biblioteca arranca vacía.
       - ./data:/app/data
     restart: unless-stopped
