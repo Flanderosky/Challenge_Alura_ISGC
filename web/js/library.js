@@ -87,20 +87,25 @@ export class LibraryDrawer {
   // ---------------------------------------------------------------- acceso
 
   puedeEscribir() {
+    if (this.almacenamiento) return false;
     return !this.protegido || !!token.get();
   }
 
   /** Ajusta la interfaz al modo en que corre el servidor. */
-  setAccess({ protegido }) {
+  setAccess({ protegido, almacenamiento }) {
     this.protegido = protegido;
+    this.almacenamiento = almacenamiento || null;
     this.aplicarAcceso();
   }
 
   aplicarAcceso() {
     const puede = this.puedeEscribir();
     this.dropzone.hidden = !puede;
-    this.readonlyNote.hidden = puede;
+    // si el servidor no puede escribir, no tiene sentido pedir el token:
+    // el problema no es de permisos del usuario sino del despliegue
+    this.readonlyNote.hidden = puede || !!this.almacenamiento;
     this.adminNote.hidden = !(this.protegido && puede);
+    if (this.almacenamiento) this.error(this.almacenamiento);
     // los botones "Quitar" solo existen si de verdad se puede quitar
     this.setDocuments(this.documents);
   }

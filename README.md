@@ -140,6 +140,7 @@ Dos variables más, ambas opcionales:
 | `HOST_PORT` | Puerto del host donde se publica la aplicación con Docker. El contenedor siempre escucha en el 8000. |
 | `ALURA_LIMITE_DIARIO_IP` | Consultas al modelo por IP y día. Por defecto 5. `0` desactiva el límite. |
 | `ALURA_LIMITE_DIARIO_TOTAL` | Consultas al modelo por día sumando a todo el mundo. Por defecto 200. `0` desactiva el límite. |
+| `APP_UID` / `APP_GID` | Usuario con el que corre el contenedor. Debe coincidir con el dueño de `data/` en el host. Consúltalos con `id -u; id -g`. |
 
 ### Por qué hay un límite de consultas
 
@@ -165,6 +166,7 @@ Dos cosas que conviene saber antes de tocar el despliegue:
 
 - **Un solo worker, a propósito.** La biblioteca y el índice FAISS viven en la memoria del proceso. Con varios workers, cada uno tendría su copia: un documento subido a uno sería invisible para los demás.
 - **El volumen `./data` tapa el `data/` de la imagen.** El directorio del host debe contener los documentos de ejemplo, o la biblioteca arranca vacía. Un `git clone` ya los trae.
+- **Los uid tienen que coincidir.** El contenedor escribe en `./data`, que pertenece al usuario del host. Si no coinciden, subir un documento falla con permiso denegado. **No des por hecho que tu usuario es 1000**: en la instancia de OCI donde se desplegó esto, `ubuntu` resultó ser 1001:120. Comprueba con `id -u; id -g` y ponlos en `APP_UID` y `APP_GID`.
 
 ---
 

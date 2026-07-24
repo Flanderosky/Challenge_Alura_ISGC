@@ -49,8 +49,19 @@ class Library:
         self._vector_store = None
         self._status = "vacio"
         self._error: Optional[str] = None
+        # Si el volumen no es escribible, la aplicación sigue en pie y responde
+        # consultas: solo se desactiva agregar y quitar documentos. Antes, un
+        # error de permisos aquí tumbaba el servidor entero en el arranque.
+        self._error_escritura: Optional[str] = None
 
-        os.makedirs(UPLOAD_DIR, exist_ok=True)
+        try:
+            os.makedirs(UPLOAD_DIR, exist_ok=True)
+        except OSError as exc:
+            self._error_escritura = (
+                f"El directorio {UPLOAD_DIR} no es escribible ({exc.strerror}). "
+                "Se pueden consultar los documentos, pero no agregar ni quitar."
+            )
+
         self._load_registry()
         self._seed_examples()
 
@@ -70,8 +81,16 @@ class Library:
 
     def _save_registry(self) -> None:
         payload = {"documents": list(self._documents.values())}
-        with open(REGISTRY_PATH, "w", encoding="utf-8") as handle:
-            json.dump(payload, handle, ensure_ascii=False, indent=2)
+        try:
+            with open(REGISTRY_PATH, "w", encoding="utf-8") as handle:
+                json.dump(payload, handle, ensure_ascii=False, indent=2)
+        except OSError as exc:
+            # sin registro en disco la biblioteca sigue funcionando en memoria;
+            # lo que se pierde es recordar las subidas tras un reinicio.
+            # No se pisa un error anterior: ese describe la causa raíz.
+            self._error_escritura = self._error_escritura or (
+                f"No se pudo guardar el registro de documentos ({exc.strerror})."
+            )
 
     def _seed_examples(self) -> None:
         """Carga los documentos de ejemplo la primera vez, para que la app no arranque vacía."""
@@ -151,6 +170,7 @@ class Library:
             return {
                 "status": self._status,
                 "error": self._error,
+                "storage_error": self._error_escritura,
                 "documents": documentos,
                 "chunk_count": sum(doc["chunks"] for doc in documentos),
             }
@@ -186,6 +206,9 @@ class Library:
     # ------------------------------------------------------------ mutaciones
 
     def add(self, filename: str, content: bytes) -> dict:
+        if self._error_escritura:
+            raise LibraryError(self._error_escritura)
+
         extension = os.path.splitext(filename)[1].lower()
         if extension not in ALLOWED_EXTENSIONS:
             raise LibraryError(f"Solo se aceptan archivos PDF o CSV. Recibido: {extension or 'sin extensión'}")

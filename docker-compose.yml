@@ -4,6 +4,10 @@ services:
     # nombre distinto al del despliegue anterior: un contenedor parado sigue
     # reservando su nombre, y el arranque fallaría por colisión
     container_name: meridia-agente
+    # El contenedor escribe en ./data, que pertenece al usuario del host. Si
+    # los uid no coinciden, la subida de documentos falla con permiso denegado.
+    # No des por hecho que tu usuario es 1000: compruébalo con `id -u; id -g`.
+    user: "${APP_UID:-1000}:${APP_GID:-1000}"
     ports:
       # El contenedor escucha en 8000. En OCI se publica en el 8501, que ya
       # está abierto en la Security List, así que no hay que tocar la red.

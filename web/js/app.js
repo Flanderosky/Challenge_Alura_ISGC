@@ -60,7 +60,10 @@ function aplicarEstado(estado) {
   });
   flow.setModel(estado.model ?? '—');
   // el modo de acceso decide si cada fila lleva botón de quitar
-  library.setAccess({ protegido: !!estado.write_protected });
+  library.setAccess({
+    protegido: !!estado.write_protected,
+    almacenamiento: estado.storage_error,
+  });
   library.setDocuments(estado.documents);
 
   pintarSugerencias();
