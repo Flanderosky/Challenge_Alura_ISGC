@@ -1,104 +1,174 @@
 """
-Módulo del agente de IA.
-Configura el LLM y la cadena de preguntas y respuestas con RAG.
+Agente de preguntas y respuestas sobre los documentos indexados.
+
+Las etapas (recuperación y generación) están separadas a propósito: así la
+interfaz puede medir y mostrar lo que realmente tarda cada una, en vez de
+simular el progreso.
 """
 
 import os
-from typing import Optional
+from typing import Iterable, Iterator, List, Optional, Sequence, Tuple
 
 from dotenv import load_dotenv
-from langchain_core.prompts import PromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnableParallel, RunnablePassthrough
-from langchain_community.vectorstores import FAISS
+from langchain_core.documents import Document
+
+from src.vectorstore import search
 
 load_dotenv()
 
+MAX_HISTORY_TURNS = 6
+
+
+_clientes: dict = {}
+
 
 def get_llm(provider: Optional[str] = None):
-    """Instancia el modelo de lenguaje según el proveedor configurado."""
-    provider = (provider or os.getenv("LLM_PROVIDER", "gemini")).lower()
+    """
+    Cliente del modelo de lenguaje según el proveedor configurado.
 
+    Se reutiliza entre consultas: construirlo cuesta un par de segundos que,
+    si no, se cargaban al tiempo total de cada pregunta.
+    """
+    provider = (provider or os.getenv("LLM_PROVIDER", "gemini")).lower()
+    clave = (provider, os.getenv("GOOGLE_API_KEY"), os.getenv("COHERE_API_KEY"),
+             os.getenv("OPENAI_API_KEY"), model_name(provider))
+
+    if clave not in _clientes:
+        _clientes[clave] = _build_llm(provider)
+    return _clientes[clave]
+
+
+def _build_llm(provider: str):
     if provider == "gemini":
         from langchain_google_genai import ChatGoogleGenerativeAI
+
         api_key = os.getenv("GOOGLE_API_KEY")
         if not api_key:
             raise ValueError("Falta GOOGLE_API_KEY en las variables de entorno.")
         model = os.getenv("GOOGLE_MODEL", "gemini-3.1-flash-lite")
         return ChatGoogleGenerativeAI(google_api_key=api_key, model=model, temperature=0.3)
 
-    elif provider == "cohere":
+    if provider == "cohere":
         from langchain_cohere import ChatCohere
+
         api_key = os.getenv("COHERE_API_KEY")
         if not api_key:
             raise ValueError("Falta COHERE_API_KEY en las variables de entorno.")
         model = os.getenv("COHERE_MODEL", "command-r")
         return ChatCohere(cohere_api_key=api_key, model=model, temperature=0.3)
 
-    elif provider == "openai":
+    if provider == "openai":
         from langchain_openai import ChatOpenAI
+
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
             raise ValueError("Falta OPENAI_API_KEY en las variables de entorno.")
         model = os.getenv("OPENAI_MODEL", "gpt-3.5-turbo")
         return ChatOpenAI(openai_api_key=api_key, model=model, temperature=0.3)
 
-    else:
-        raise ValueError(f"Proveedor de LLM no soportado: {provider}")
+    raise ValueError(f"Proveedor de LLM no soportado: {provider}")
 
 
-_CUSTOM_PROMPT = """Eres un asistente experto que responde preguntas basándote únicamente en el contexto proporcionado.
-Si no encuentras la respuesta en el contexto, di honestamente que no lo sabes.
-No inventes información.
-
-Contexto:
-{context}
-
-Pregunta: {question}
-
-Respuesta útil y directa:"""
-
-
-def _format_docs(docs):
-    """Une los documentos recuperados en un solo texto."""
-    return "\n\n".join(doc.page_content for doc in docs)
-
-
-def create_qa_chain(vector_store: FAISS, llm=None):
-    """Crea la cadena de QA con RAG usando el vector store."""
-    if llm is None:
-        llm = get_llm()
-
-    retriever = vector_store.as_retriever(search_kwargs={"k": 4})
-
-    prompt = PromptTemplate(
-        template=_CUSTOM_PROMPT,
-        input_variables=["context", "question"],
-    )
-
-    # Cadena que genera la respuesta
-    answer_chain = (
-        {"context": retriever | _format_docs, "question": RunnablePassthrough()}
-        | prompt
-        | llm
-        | StrOutputParser()
-    )
-
-    # Cadena que también devuelve los documentos fuente
-    rag_chain = RunnableParallel(
-        {
-            "answer": answer_chain,
-            "sources": retriever,
-        }
-    )
-
-    return rag_chain
-
-
-def ask_question(rag_chain, question: str) -> dict:
-    """Ejecuta una pregunta sobre la cadena RAG y devuelve la respuesta y fuentes."""
-    result = rag_chain.invoke(question)
+def model_name(provider: Optional[str] = None) -> str:
+    """Nombre del modelo activo, para mostrarlo en la interfaz."""
+    provider = (provider or os.getenv("LLM_PROVIDER", "gemini")).lower()
     return {
-        "answer": result.get("answer", ""),
-        "sources": [doc.page_content[:300] for doc in result.get("sources", [])],
+        "gemini": os.getenv("GOOGLE_MODEL", "gemini-3.1-flash-lite"),
+        "cohere": os.getenv("COHERE_MODEL", "command-r"),
+        "openai": os.getenv("OPENAI_MODEL", "gpt-3.5-turbo"),
+    }.get(provider, provider)
+
+
+_SYSTEM = """Eres el asistente documental de Alura. Respondes únicamente con lo que dicen los fragmentos numerados que recibes.
+
+Reglas:
+- Cita la fuente con [n] al final de cada afirmación que la use. Usa el número del fragmento.
+- Si los fragmentos no contienen la respuesta, dilo en una frase y señala qué documento haría falta. No completes con conocimiento propio.
+- No inventes cifras, fechas ni nombres.
+- Responde en español, directo, sin preámbulos."""
+
+
+def build_prompt(
+    fragments: Sequence[Document],
+    question: str,
+    history: Optional[Iterable[dict]] = None,
+) -> str:
+    """Arma el prompt con los fragmentos numerados y el historial reciente."""
+    bloques = [
+        f"[{i}] ({frag.metadata.get('filename', 'documento')}, "
+        f"{frag.metadata.get('locator', 's/n')})\n{frag.page_content}"
+        for i, frag in enumerate(fragments, start=1)
+    ]
+
+    partes = [_SYSTEM, "", "Fragmentos:", "\n\n".join(bloques) or "(sin fragmentos)"]
+
+    turnos = list(history or [])[-MAX_HISTORY_TURNS:]
+    if turnos:
+        partes += [
+            "",
+            "Conversación previa (para resolver referencias como «eso» o «y entonces»):",
+            "\n".join(
+                f"{'Usuario' if t.get('role') == 'user' else 'Asistente'}: {t.get('content', '')}"
+                for t in turnos
+            ),
+        ]
+
+    partes += ["", f"Pregunta: {question}", "", "Respuesta:"]
+    return "\n".join(partes)
+
+
+def retrieve(vector_store, question: str, k: int = 4) -> List[Tuple[Document, float]]:
+    """Recupera los fragmentos más relevantes con su puntuación."""
+    return search(vector_store, question, k=k)
+
+
+def _as_text(content) -> str:
+    """
+    Normaliza el contenido de un fragmento del stream.
+
+    Gemini entrega listas de bloques y no cadenas; el resto de proveedores
+    entrega texto plano.
+    """
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        return "".join(
+            parte if isinstance(parte, str) else str(parte.get("text", ""))
+            for parte in content
+            if isinstance(parte, (str, dict))
+        )
+    return ""
+
+
+def stream_answer(llm, prompt: str) -> Iterator[str]:
+    """Genera la respuesta token a token."""
+    for chunk in llm.stream(prompt):
+        texto = _as_text(getattr(chunk, "content", ""))
+        if texto:
+            yield texto
+
+
+def answer_question(
+    vector_store,
+    question: str,
+    k: int = 4,
+    history: Optional[Iterable[dict]] = None,
+    llm=None,
+) -> dict:
+    """Respuesta completa en una sola llamada. Útil para pruebas y uso por script."""
+    fragments = retrieve(vector_store, question, k=k)
+    prompt = build_prompt([doc for doc, _ in fragments], question, history)
+    llm = llm or get_llm()
+    respuesta = "".join(stream_answer(llm, prompt))
+    return {
+        "answer": respuesta,
+        "sources": [
+            {
+                "filename": doc.metadata.get("filename"),
+                "locator": doc.metadata.get("locator"),
+                "score": score,
+                "text": doc.page_content,
+            }
+            for doc, score in fragments
+        ],
     }
