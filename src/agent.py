@@ -17,9 +17,17 @@ load_dotenv()
 
 def get_llm(provider: Optional[str] = None):
     """Instancia el modelo de lenguaje según el proveedor configurado."""
-    provider = (provider or os.getenv("LLM_PROVIDER", "cohere")).lower()
+    provider = (provider or os.getenv("LLM_PROVIDER", "gemini")).lower()
 
-    if provider == "cohere":
+    if provider == "gemini":
+        from langchain_google_genai import ChatGoogleGenerativeAI
+        api_key = os.getenv("GOOGLE_API_KEY")
+        if not api_key:
+            raise ValueError("Falta GOOGLE_API_KEY en las variables de entorno.")
+        model = os.getenv("GOOGLE_MODEL", "gemini-1.5-flash")
+        return ChatGoogleGenerativeAI(google_api_key=api_key, model=model, temperature=0.3)
+
+    elif provider == "cohere":
         from langchain_cohere import ChatCohere
         api_key = os.getenv("COHERE_API_KEY")
         if not api_key:

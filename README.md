@@ -17,7 +17,7 @@ Facilitar el acceso a la información contenida en manuales, informes, política
 ```
 ┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
 │   Navegador     │────▶│  Streamlit (UI)  │────▶│  LangChain RAG  │
-│   del usuario   │◀────│    Puerto 8501   │◀────│   + LLM (Cohere │
+│   del usuario   │◀────│    Puerto 8501   │◀────│   + LLM (Gemini │
 └─────────────────┘     └──────────────────┘     │   / OpenAI)     │
                                                  └────────┬────────┘
                                                           │
@@ -49,7 +49,8 @@ Facilitar el acceso a la información contenida en manuales, informes, política
 - **Pandas** — lectura de CSVs
 - **FAISS** — base de datos vectorial en memoria
 - **langchain-huggingface** — embeddings locales con sentence-transformers
-- **Cohere / OpenAI** — modelos de lenguaje
+- **Google Gemini** — modelo de lenguaje principal (rápido y con generoso tier gratuito)
+- **Cohere / OpenAI** — alternativas de modelos de lenguaje
 - **Docker** — contenedorización
 - **OCI Compute** — despliegue en la nube
 
@@ -104,14 +105,22 @@ cp .env.example .env
 Edita `.env` con tu proveedor y clave de API:
 
 ```env
+LLM_PROVIDER=gemini
+GOOGLE_API_KEY=tu_google_api_key
+GOOGLE_MODEL=gemini-1.5-flash
+```
+
+También puedes usar Cohere u OpenAI:
+
+```env
+# Cohere
 LLM_PROVIDER=cohere
 COHERE_API_KEY=tu_cohere_api_key
 COHERE_MODEL=command-r
 ```
 
-También puedes usar OpenAI:
-
 ```env
+# OpenAI
 LLM_PROVIDER=openai
 OPENAI_API_KEY=tu_openai_api_key
 OPENAI_MODEL=gpt-3.5-turbo
@@ -261,8 +270,8 @@ La aplicación fue desplegada exitosamente en OCI Compute.
 
 - **Nunca subas tu archivo `.env` con claves reales** al repositorio; está incluido en `.gitignore`.
 - El proyecto usa un modelo de embeddings local, por lo que no requiere conexión a internet para indexar documentos.
-- El LLM sí requiere una clave de API de Cohere u OpenAI.
-- Para OCI free tier, recomendamos Cohere u OpenAI para evitar consumir recursos de CPU/GPU en la instancia.
+- El LLM sí requiere una clave de API de Google Gemini, Cohere u OpenAI.
+- Para OCI free tier, recomendamos Gemini porque tiene un tier gratuito generoso y la API es muy rápida.
 
 ---
 

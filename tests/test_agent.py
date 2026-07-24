@@ -42,4 +42,4 @@ def test_get_llm_without_key_raises():
 
     # Sin configuración debe fallar
     with pytest.raises(ValueError):
-        get_llm("cohere")
+        get_llm("gemini")
