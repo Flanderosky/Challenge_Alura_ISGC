@@ -13,13 +13,14 @@ import time
 from contextlib import asynccontextmanager
 from typing import AsyncIterator, Iterator, List, Optional
 
-from fastapi import Depends, FastAPI, File, HTTPException, UploadFile
+from fastapi import Depends, FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from api.auth import require_write_token, write_protected
+from api.auth import expected_token, require_write_token, write_protected
+from api.limites import cache, cuota, limite_ip
 from api.store import LibraryError, library
 from src.agent import build_prompt, get_llm, model_name, stream_answer
 from src.vectorstore import embed_query, search_by_vector
@@ -68,8 +69,9 @@ class Query(BaseModel):
 
 
 @app.get("/api/state")
-def get_state() -> dict:
+def get_state(request: Request = None) -> dict:
     estado = library.state()
+    estado["quota"] = cuota.estado(_ip(request)) if request else {"limite": limite_ip()}
     estado["model"] = model_name()
     estado["provider"] = os.getenv("LLM_PROVIDER", "gemini")
     estado["top_k"] = TOP_K
@@ -97,6 +99,7 @@ async def add_document(file: UploadFile = File(...)) -> dict:
     except LibraryError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
     await run_in_threadpool(library.build_index)
+    cache.limpiar()  # la biblioteca cambió: las respuestas guardadas ya no valen
     return {"document": registro, "state": get_state()}
 
 
@@ -108,6 +111,7 @@ def delete_document(doc_id: str) -> dict:
     except LibraryError as exc:
         raise HTTPException(status_code=404, detail=str(exc))
     library.build_index()
+    cache.limpiar()
     return {"state": get_state()}
 
 
@@ -144,6 +148,18 @@ def document_file(doc_id: str):
 # -------------------------------------------------------------------- consulta
 
 
+def _ip(request: Optional[Request]) -> str:
+    return (request.client.host if request and request.client else "desconocida")
+
+
+def _es_admin(request: Optional[Request]) -> bool:
+    """El token de administración se salta la cuota: es tu propia demo."""
+    esperado = expected_token()
+    if not esperado or request is None:
+        return False
+    return request.headers.get("X-Alura-Token") == esperado
+
+
 def _sse(payload: dict) -> str:
     return f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
 
@@ -162,15 +178,15 @@ def _hit_payload(doc, score: float, orden: int) -> dict:
     }
 
 
-def _run(query: Query) -> Iterator[str]:
+def _run(query: Query, ip: str, admin: bool) -> Iterator[str]:
     """Envoltura: cualquier fallo inesperado llega al cliente como evento, no como conexión cortada."""
     try:
-        yield from _pipeline(query)
+        yield from _pipeline(query, ip, admin)
     except Exception as exc:
         yield _sse({"type": "error", "message": f"El pipeline se interrumpió: {exc}"})
 
 
-def _pipeline(query: Query) -> Iterator[str]:
+def _pipeline(query: Query, ip: str, admin: bool) -> Iterator[str]:
     estado = library.state()
     if estado["status"] != "listo":
         mensaje = {
@@ -233,29 +249,55 @@ def _pipeline(query: Query) -> Iterator[str]:
 
     # Etapa 3 · generar la respuesta
     yield _sse({"type": "stage", "id": "modelo", "status": "active", "meta": {"model": model_name()}})
-    prompt = build_prompt(
-        [doc for doc, _ in resultados],
-        query.question,
-        [turno.model_dump() for turno in query.history],
-    )
+
+    # Si esta misma pregunta ya se respondió sobre estos mismos fragmentos, se
+    # reutiliza: no se llama al modelo y no consume cuota de nadie.
+    clave = cache.clave(query.question, tuple(h["chunk_id"] for h in hits))
+    guardada = None if query.history else cache.obtener(clave)
 
     t0 = time.perf_counter()
     partes: List[str] = []
     primera_ms: Optional[float] = None
-    try:
-        for texto in stream_answer(llm, prompt):
-            if primera_ms is None:
-                primera_ms = (time.perf_counter() - t0) * 1000
-            partes.append(texto)
-            yield _sse({"type": "token", "text": texto})
-    except Exception as exc:
-        yield _sse({"type": "error", "message": f"El modelo no pudo responder: {exc}"})
-        return
+
+    if guardada is not None:
+        respuesta = guardada
+        yield _sse({"type": "token", "text": respuesta})
+    else:
+        motivo = None if admin else cuota.disponible(ip)
+        if motivo:
+            yield _sse({"type": "error", "message": motivo, "quota": cuota.estado(ip)})
+            return
+
+        prompt = build_prompt(
+            [doc for doc, _ in resultados],
+            query.question,
+            [turno.model_dump() for turno in query.history],
+        )
+        try:
+            for texto in stream_answer(llm, prompt):
+                if primera_ms is None:
+                    primera_ms = (time.perf_counter() - t0) * 1000
+                partes.append(texto)
+                yield _sse({"type": "token", "text": texto})
+        except Exception as exc:
+            yield _sse({"type": "error", "message": f"El modelo no pudo responder: {exc}"})
+            return
+
+        if not admin:
+            cuota.consumir(ip)
+        respuesta = "".join(partes).strip()
+        if not query.history:
+            cache.guardar(clave, respuesta)
 
     ms_modelo = (time.perf_counter() - t0) * 1000
-    respuesta = "".join(partes).strip()
 
-    yield _sse({"type": "stage", "id": "modelo", "status": "done", "ms": round(ms_modelo, 1)})
+    yield _sse({
+        "type": "stage",
+        "id": "modelo",
+        "status": "done",
+        "ms": round(ms_modelo, 1),
+        "meta": {"cached": guardada is not None},
+    })
     yield _sse({
         "type": "stage",
         "id": "respuesta",
@@ -274,13 +316,15 @@ def _pipeline(query: Query) -> Iterator[str]:
             "total": round((time.perf_counter() - inicio) * 1000, 1),
         },
         "characters": len(respuesta),
+        "cached": guardada is not None,
+        "quota": cuota.estado(ip),
     })
 
 
 @app.post("/api/query")
-def query(payload: Query) -> StreamingResponse:
+def query(payload: Query, request: Request) -> StreamingResponse:
     return StreamingResponse(
-        _run(payload),
+        _run(payload, _ip(request), _es_admin(request)),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )

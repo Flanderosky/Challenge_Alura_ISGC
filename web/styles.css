@@ -112,6 +112,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
   font-weight: 500;
 }
 
+#meter-quota[data-agotada='true'] .meter-value { color: var(--alert); }
+
 #index-status[data-status='listo']     { color: var(--done); }
 #index-status[data-status='indexando'] { color: var(--plot); }
 #index-status[data-status='error']     { color: var(--alert); }

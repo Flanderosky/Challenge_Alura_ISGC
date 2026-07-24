@@ -138,6 +138,18 @@ Dos variables más, ambas opcionales:
 |---|---|
 | `ALURA_ADMIN_TOKEN` | Si está definida, agregar y quitar documentos exige la cabecera `X-Alura-Token`. Consultar y leer siguen siendo públicos. Si está vacía, la escritura queda abierta, que es lo cómodo en local. |
 | `HOST_PORT` | Puerto del host donde se publica la aplicación con Docker. El contenedor siempre escucha en el 8000. |
+| `ALURA_LIMITE_DIARIO_IP` | Consultas al modelo por IP y día. Por defecto 5. `0` desactiva el límite. |
+| `ALURA_LIMITE_DIARIO_TOTAL` | Consultas al modelo por día sumando a todo el mundo. Por defecto 200. `0` desactiva el límite. |
+
+### Por qué hay un límite de consultas
+
+La demo es pública y el modelo corre sobre la **cuota gratuita** de Google Gemini. Sin un tope, un bucle automatizado la agota en minutos y el agente deja de responder justo cuando alguien quiere probarlo. El límite no protege un gasto: protege la disponibilidad.
+
+Tres detalles del diseño:
+
+- **Las respuestas ya dadas no consumen cuota.** Si alguien repite una pregunta que ya se contestó sobre los mismos fragmentos, se sirve la respuesta guardada sin llamar al modelo. La caché se invalida sola cuando cambia la biblioteca.
+- **El contador se muestra en la cabecera**, para que se vea cuántas consultas quedan en vez de toparse con un error sin aviso.
+- **El token de administración se salta el límite**, así que quien mantiene la instancia siempre puede probarla.
 
 ---
 

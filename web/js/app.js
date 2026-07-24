@@ -50,6 +50,7 @@ function aplicarEstado(estado) {
   $('chunk-count').textContent = estado.chunk_count || '—';
   $('model-name').textContent = estado.model ?? '—';
   $('doc-count').textContent = estado.documents.length;
+  pintarCuota(estado.quota);
 
   flow.setDocuments(estado.documents);
   flow.setIndex({
@@ -64,6 +65,18 @@ function aplicarEstado(estado) {
 
   pintarSugerencias();
   $('send').disabled = app.ocupado || estado.status !== 'listo';
+}
+
+/** Cuántas consultas quedan hoy. Solo se muestra si de verdad hay un límite. */
+function pintarCuota(quota) {
+  const medidor = $('meter-quota');
+  if (!quota?.limite) {
+    medidor.hidden = true;
+    return;
+  }
+  medidor.hidden = false;
+  $('quota-value').textContent = `${quota.usadas ?? 0} / ${quota.limite}`;
+  medidor.dataset.agotada = quota.restantes === 0 ? 'true' : 'false';
 }
 
 async function refrescarEstado() {
@@ -268,6 +281,7 @@ async function enviar(pregunta) {
 
         case 'done':
           respuesta = evento.answer || respuesta;
+          if (evento.quota) pintarCuota(evento.quota);
           agente.cuerpo.classList.remove('caret');
           agente.cuerpo.innerHTML = renderRespuesta(respuesta);
           pintarEvidencia(agente.turno, app.hits);
@@ -280,6 +294,7 @@ async function enviar(pregunta) {
           break;
 
         case 'error':
+          if (evento.quota) pintarCuota(evento.quota);
           throw new Error(evento.message);
       }
     }
