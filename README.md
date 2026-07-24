@@ -48,7 +48,7 @@ Facilitar el acceso a la información contenida en manuales, informes, política
 - **PyPDF** — lectura de PDFs
 - **Pandas** — lectura de CSVs
 - **FAISS** — base de datos vectorial en memoria
-- **sentence-transformers** — embeddings locales
+- **langchain-huggingface** — embeddings locales con sentence-transformers
 - **Cohere / OpenAI** — modelos de lenguaje
 - **Docker** — contenedorización
 - **OCI Compute** — despliegue en la nube

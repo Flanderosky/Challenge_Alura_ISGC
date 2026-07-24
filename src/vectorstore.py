@@ -4,9 +4,9 @@ Módulo para crear y consultar el vector store con FAISS.
 
 from typing import List, Optional
 
-from langchain.schema import Document
+from langchain_core.documents import Document
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 
 
 def create_vector_store(documents: List[Document], index_path: Optional[str] = None) -> FAISS:

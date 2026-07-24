@@ -7,9 +7,9 @@ import os
 from typing import Optional
 
 from dotenv import load_dotenv
-from langchain.schema import Document
-from langchain.chains import RetrievalQA
-from langchain.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 from langchain_community.vectorstores import FAISS
 
 load_dotenv()
@@ -51,30 +51,46 @@ Pregunta: {question}
 Respuesta útil y directa:"""
 
 
+def _format_docs(docs):
+    """Une los documentos recuperados en un solo texto."""
+    return "\n\n".join(doc.page_content for doc in docs)
+
+
 def create_qa_chain(vector_store: FAISS, llm=None):
     """Crea la cadena de QA con RAG usando el vector store."""
     if llm is None:
         llm = get_llm()
+
+    retriever = vector_store.as_retriever(search_kwargs={"k": 4})
 
     prompt = PromptTemplate(
         template=_CUSTOM_PROMPT,
         input_variables=["context", "question"],
     )
 
-    qa_chain = RetrievalQA.from_chain_type(
-        llm=llm,
-        chain_type="stuff",
-        retriever=vector_store.as_retriever(search_kwargs={"k": 4}),
-        return_source_documents=True,
-        chain_type_kwargs={"prompt": prompt},
+    # Cadena que genera la respuesta
+    answer_chain = (
+        {"context": retriever | _format_docs, "question": RunnablePassthrough()}
+        | prompt
+        | llm
+        | StrOutputParser()
     )
-    return qa_chain
+
+    # Cadena que también devuelve los documentos fuente
+    rag_chain = RunnableParallel(
+        {
+            "answer": answer_chain,
+            "sources": retriever,
+        }
+    )
+
+    return rag_chain
 
 
-def ask_question(qa_chain, question: str) -> dict:
-    """Ejecuta una pregunta sobre la cadena QA y devuelve la respuesta y fuentes."""
-    result = qa_chain.invoke({"query": question})
+def ask_question(rag_chain, question: str) -> dict:
+    """Ejecuta una pregunta sobre la cadena RAG y devuelve la respuesta y fuentes."""
+    result = rag_chain.invoke(question)
     return {
-        "answer": result.get("result", ""),
-        "sources": [doc.page_content[:200] for doc in result.get("source_documents", [])],
+        "answer": result.get("answer", ""),
+        "sources": [doc.page_content[:300] for doc in result.get("sources", [])],
     }
