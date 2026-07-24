@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Alura · banco documental</title>
+<meta name="description" content="Pregunta a tus documentos y observa el recorrido real de la consulta: qué se recuperó, de dónde y cuánto tardó." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23faf9f6'/%3E%3Crect x='5' y='5' width='22' height='22' fill='none' stroke='%2314181b' stroke-width='2'/%3E%3Cpath d='M9 20 L16 10 L23 20' fill='none' stroke='%231f4fd8' stroke-width='2.5'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..700&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400..600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+<header class="bench-head">
+  <div class="mark">
+    <span class="mark-name">ALURA</span>
+    <span class="mark-role">banco documental</span>
+  </div>
+
+  <div class="head-meters">
+    <div class="meter" id="meter-index">
+      <span class="meter-label">índice</span>
+      <span class="meter-value" id="index-status">iniciando</span>
+    </div>
+    <div class="meter">
+      <span class="meter-label">fragmentos</span>
+      <span class="meter-value" id="chunk-count">—</span>
+    </div>
+    <div class="meter">
+      <span class="meter-label">modelo</span>
+      <span class="meter-value" id="model-name">—</span>
+    </div>
+  </div>
+
+  <button class="btn-library" id="open-library" aria-haspopup="dialog">
+    <span class="btn-library-count" id="doc-count">0</span>
+    Biblioteca
+  </button>
+</header>
+
+<main class="bench">
+
+  <!-- ────────────────────────────── recorrido ────────────────────────────── -->
+  <section class="panel panel-flow" aria-labelledby="flow-title">
+    <div class="panel-head">
+      <h2 id="flow-title">Recorrido de la consulta</h2>
+      <p class="panel-note" id="flow-note">En reposo</p>
+    </div>
+
+    <div class="flow-stage" id="flow-stage">
+      <svg id="flow-svg" viewBox="0 0 960 540" role="img"
+           aria-label="Diagrama del recorrido: los documentos alimentan el índice, la consulta pasa por recuperación, modelo y respuesta."></svg>
+    </div>
+
+    <dl class="telemetry" id="telemetry">
+      <div class="tele"><dt>vectorizar</dt><dd data-tele="embedding">—</dd></div>
+      <div class="tele"><dt>buscar</dt><dd data-tele="busqueda">—</dd></div>
+      <div class="tele"><dt>1.er token</dt><dd data-tele="primer_token">—</dd></div>
+      <div class="tele"><dt>modelo</dt><dd data-tele="modelo">—</dd></div>
+      <div class="tele tele-total"><dt>total</dt><dd data-tele="total">—</dd></div>
+    </dl>
+  </section>
+
+  <!-- ──────────────────────────────── chat ───────────────────────────────── -->
+  <section class="panel panel-chat" aria-labelledby="chat-title">
+    <div class="panel-head">
+      <h2 id="chat-title">Consulta</h2>
+      <button class="btn-ghost" id="clear-thread" hidden>Vaciar hilo</button>
+    </div>
+
+    <div class="thread" id="thread" aria-live="polite">
+      <div class="thread-empty" id="thread-empty">
+        <p class="empty-lead">Pregúntale a tus documentos.</p>
+        <p class="empty-help">Cada respuesta se construye solo con lo que hay en la biblioteca, y viene con las fuentes que la sostienen.</p>
+        <div class="starters" id="starters"></div>
+      </div>
+    </div>
+
+    <form class="composer" id="composer">
+      <textarea id="question" rows="1" placeholder="Escribe tu pregunta" autocomplete="off"
+                aria-label="Tu pregunta"></textarea>
+      <button type="submit" id="send" aria-label="Enviar pregunta">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" /></svg>
+      </button>
+    </form>
+  </section>
+</main>
+
+<!-- ───────────────────────────── panel lateral ───────────────────────────── -->
+<div class="scrim" id="scrim" hidden></div>
+
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" hidden>
+  <div class="drawer-head">
+    <button class="btn-back" id="drawer-back" hidden aria-label="Volver a la biblioteca">←</button>
+    <h2 id="drawer-title">Biblioteca</h2>
+    <button class="btn-close" id="drawer-close" aria-label="Cerrar">✕</button>
+  </div>
+
+  <!-- vista: lista -->
+  <div class="drawer-body" id="view-library">
+    <label class="dropzone" id="dropzone">
+      <input type="file" id="file-input" accept=".pdf,.csv" hidden />
+      <span class="dropzone-lead">Agregar documento</span>
+      <span class="dropzone-help">Arrastra un PDF o CSV, o haz clic para elegirlo</span>
+    </label>
+    <p class="drawer-msg" id="library-msg" hidden></p>
+    <ul class="doc-list" id="doc-list"></ul>
+  </div>
+
+  <!-- vista: visor -->
+  <div class="drawer-body" id="view-viewer" hidden>
+    <div class="viewer-meta" id="viewer-meta"></div>
+    <div class="viewer-page" id="viewer-page"></div>
+    <div class="viewer-nav">
+      <button class="btn-ghost" id="page-prev">Anterior</button>
+      <span class="viewer-pos" id="viewer-pos"></span>
+      <button class="btn-ghost" id="page-next">Siguiente</button>
+    </div>
+  </div>
+</aside>
+
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

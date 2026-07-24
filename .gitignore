@@ -23,6 +23,8 @@ Thumbs.db
 *.log
 *.tmp
 faiss_index/
+.pytest_cache/
+data/uploads/
 
 # Docker
 *.tar

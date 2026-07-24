@@ -1,108 +1,107 @@
-# 🤖 Alura Agente
+# Alura · banco documental
 
-Asistente de inteligencia artificial para responder preguntas en lenguaje natural a partir de documentos internos en formato **PDF** o **CSV**.
+Agente que responde preguntas en lenguaje natural sobre documentos internos en **PDF** o **CSV**, y muestra el recorrido real de cada consulta: qué se recuperó, de qué documento, con qué relevancia y cuánto tardó cada etapa.
 
-Este proyecto fue desarrollado como desafío final del programa **Alura Agente** y combina procesamiento de documentos, recuperación de información (RAG) y despliegue en la nube con Oracle Cloud Infrastructure (OCI).
-
----
-
-##  Objetivo
-
-Facilitar el acceso a la información contenida en manuales, informes, políticas y hojas de cálculo internas, permitiendo que cualquier colaborador haga preguntas directas y reciba respuestas claras sin necesidad de abrir los archivos.
+Desarrollado como desafío final del programa **Alura Agente**.
 
 ---
 
-##  Arquitectura
+## Qué lo distingue
+
+La mayoría de las demos de RAG entregan una respuesta y una lista de fuentes en texto plano. Aquí la interfaz está partida en dos:
+
+- **Izquierda — recorrido de la consulta.** Un grafo donde cada nodo se enciende cuando esa etapa está corriendo de verdad. Los tiempos son medidos, no simulados. Las conexiones que van de los documentos al índice se pintan de amarillo según cuántos fragmentos aportó cada documento y con qué relevancia.
+- **Derecha — la conversación.** La respuesta llega token a token, con citas `[n]` clicables. Cada cita abre el documento original con el pasaje resaltado sobre el texto real.
+
+Los documentos se agregan, revisan y quitan desde la biblioteca, y el índice se reconstruye solo.
+
+---
+
+## Arquitectura
 
 ```
-┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
-│   Navegador     │────▶│  Streamlit (UI)  │────▶│  LangChain RAG  │
-│   del usuario   │◀────│    Puerto 8501   │◀────│   + LLM (Gemini │
-└─────────────────┘     └──────────────────┘     │   / OpenAI)     │
-                                                 └────────┬────────┘
-                                                          │
-                              ┌───────────────────────────┼───────────┐
-                              │                           ▼           │
-                              │  ┌──────────────┐   ┌─────────────┐  │
-                              │  │  Carga PDF   │   │  Embeddings │  │
-                              │  │     CSV      │──▶│   FAISS     │  │
-                              │  └──────────────┘   └─────────────┘  │
-                              │        Docker / OCI Compute          │
-                              └──────────────────────────────────────┘
+┌──────────────────────┐        ┌─────────────────────────────────────┐
+│  Front propio        │  SSE   │  FastAPI (api/)                     │
+│  HTML + CSS + JS     │◀──────▶│  /api/state                         │
+│  sin build ni deps   │        │  /api/documents  (alta, baja, visor)│
+└──────────────────────┘        │  /api/query      (stream de eventos)│
+                                └──────────────┬──────────────────────┘
+                                               │
+                    ┌──────────────────────────┼──────────────────────┐
+                    │  src/                    ▼                      │
+                    │  loader.py     → fragmenta y anota procedencia  │
+                    │  vectorstore.py→ embeddings locales + FAISS     │
+                    │  agent.py      → prompt con citas + streaming   │
+                    └─────────────────────────────────────────────────┘
 ```
 
-### Flujo
+### El flujo de una consulta
 
-1. **Carga de documentos**: el usuario sube un PDF o CSV, o se usa el documento de ejemplo.
-2. **Procesamiento**: el archivo se divide en fragmentos y se convierte en vectores con `sentence-transformers`.
-3. **Indexación**: los vectores se almacenan en `FAISS` para búsqueda semántica rápida.
-4. **Pregunta y respuesta**: LangChain recupera los fragmentos más relevantes y el LLM genera una respuesta clara basada únicamente en el contexto.
+1. La pregunta se vectoriza con `sentence-transformers` (local, sin red).
+2. FAISS devuelve los `k` fragmentos más cercanos con su relevancia (0–1, coseno).
+3. Se arma el prompt con los fragmentos numerados y los últimos turnos de la conversación.
+4. El modelo redacta citando `[n]`; la respuesta se transmite token a token.
+
+Cada paso emite un evento SSE, y eso es exactamente lo que dibuja el grafo.
 
 ---
 
-##  Tecnologías y herramientas
+## Tecnologías
 
 - **Python 3.12**
-- **Streamlit** — interfaz web
+- **FastAPI + Uvicorn** — API y servidor de estáticos
 - **LangChain** — orquestación de RAG
-- **PyPDF** — lectura de PDFs
-- **Pandas** — lectura de CSVs
-- **FAISS** — base de datos vectorial en memoria
-- **langchain-huggingface** — embeddings locales con sentence-transformers
-- **Google Gemini** — modelo de lenguaje principal (rápido y con generoso tier gratuito)
-- **Cohere / OpenAI** — alternativas de modelos de lenguaje
+- **FAISS** — índice vectorial en memoria
+- **sentence-transformers** (`all-MiniLM-L6-v2`) — embeddings locales
+- **PyPDF / Pandas** — lectura de PDF y CSV
+- **Google Gemini** — modelo por defecto (Cohere y OpenAI como alternativas)
 - **Docker** — contenedorización
 - **OCI Compute** — despliegue en la nube
 
+El front no usa framework ni build: HTML, CSS y módulos ES nativos.
+
 ---
 
-##  Estructura del repositorio
+## Estructura
 
 ```
-alura-agente/
-├── app.py                  # Aplicación Streamlit
-├── requirements.txt        # Dependencias Python
-├── Dockerfile              # Imagen para despliegue
-├── docker-compose.yml      # Orquestación local
-├── .env.example            # Variables de entorno de ejemplo
-├── data/
-│   ├── ventas_ejemplo.csv       # Datos de ejemplo
-│   └── politicas_ejemplo.pdf    # Documento PDF de ejemplo
+Challenge_Alura_ISGC/
+├── api/
+│   ├── main.py             # endpoints y stream de eventos del pipeline
+│   └── store.py            # biblioteca de documentos e índice
 ├── src/
-│   ├── loader.py           # Carga de PDF y CSV
-│   ├── vectorstore.py      # Creación del índice FAISS
-│   └── agent.py            # Configuración del LLM y cadena QA
-├── tests/
-│   └── test_agent.py       # Pruebas básicas
-└── README.md               # Este archivo
+│   ├── loader.py           # carga y fragmentación con procedencia
+│   ├── vectorstore.py      # embeddings compartidos + FAISS
+│   └── agent.py            # LLM, prompt con citas, streaming
+├── web/
+│   ├── index.html
+│   ├── styles.css
+│   └── js/{app,flow,library,api}.js
+├── data/                   # documentos de ejemplo y subidas
+├── tests/test_agent.py
+├── Dockerfile
+├── docker-compose.yml
+└── requirements.txt
 ```
 
 ---
 
-##  Cómo ejecutar el proyecto
-
-### 1. Clonar el repositorio
-
-```bash
-git clone https://github.com/tu-usuario/alura-agente.git
-cd alura-agente
-```
-
-### 2. Crear entorno virtual e instalar dependencias
+## Cómo ejecutarlo
 
 ```bash
 python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
+venv\Scripts\activate        # Linux/macOS: source venv/bin/activate
 pip install -r requirements.txt
+
+cp .env.example .env         # y edita tu clave de API
+uvicorn api.main:app --reload
 ```
 
-### 3. Configurar variables de entorno
+Abre `http://localhost:8000`.
 
-```bash
-cp .env.example .env
-```
+La primera vez se descarga el modelo de embeddings (~90 MB). Mientras tanto la cabecera muestra el índice en estado *construyendo*.
 
-Edita `.env` con tu proveedor y clave de API:
+### Variables de entorno
 
 ```env
 LLM_PROVIDER=gemini
@@ -110,177 +109,82 @@ GOOGLE_API_KEY=tu_google_api_key
 GOOGLE_MODEL=gemini-3.1-flash-lite
 ```
 
-También puedes usar Cohere u OpenAI:
-
-```env
-# Cohere
-LLM_PROVIDER=cohere
-COHERE_API_KEY=tu_cohere_api_key
-COHERE_MODEL=command-r
-```
-
-```env
-# OpenAI
-LLM_PROVIDER=openai
-OPENAI_API_KEY=tu_openai_api_key
-OPENAI_MODEL=gpt-3.5-turbo
-```
-
-### 4. Ejecutar localmente
-
-```bash
-streamlit run app.py
-```
-
-Abre tu navegador en `http://localhost:8501`.
+También acepta `cohere` (`COHERE_API_KEY`, `COHERE_MODEL`) y `openai` (`OPENAI_API_KEY`, `OPENAI_MODEL`).
 
 ---
 
-##  Ejecutar con Docker
+## Docker
 
 ```bash
-# Construir imagen
-docker build -t alura-agente .
-
-# Ejecutar con variables de entorno
-docker run -p 8501:8501 --env-file .env alura-agente
+docker compose up --build
 ```
 
-O con Docker Compose:
-
-```bash
-docker-compose up --build
-```
+La imagen descarga el modelo de embeddings durante el build, así que el contenedor arranca listo.
 
 ---
 
-##  Despliegue en OCI Compute
+## Despliegue en OCI Compute
 
-### Paso a paso sugerido
-
-1. **Crear una instancia** en OCI Compute:
-   - Forma: `VM.Standard.E2.1.Micro` (free tier) o superior.
-   - Sistema operativo: Ubuntu 22.04 o Oracle Linux 8.
-   - Añadir tu clave SSH y anotar la IP pública.
-
-2. **Abrir el puerto 8501**:
-   - En la *Security List* del subnet de la instancia, agregar una regla de entrada:
-     - Tipo: `Stateful`
-     - Protocolo: `TCP`
-     - Puerto destino: `8501`
-     - Origen: `0.0.0.0/0`
-
-3. **Conectarse por SSH**:
+1. **Instancia**: `VM.Standard.E2.1.Micro` (free tier) o superior, Ubuntu 22.04 u Oracle Linux 8.
+2. **Puerto 8000** abierto en la *Security List* del subnet: `Stateful`, `TCP`, destino `8000`, origen `0.0.0.0/0`.
+3. **Docker** en la instancia:
 
 ```bash
-ssh -i ~/.oci/llave.pem ubuntu@<IP_PUBLICA>
+sudo apt-get update && sudo apt-get install -y docker.io docker-compose-v2
+sudo usermod -aG docker $USER && newgrp docker
 ```
 
-4. **Instalar Docker**:
+4. **Código y arranque**:
 
 ```bash
-sudo apt-get update
-sudo apt-get install -y docker.io docker-compose
-sudo usermod -aG docker $USER
-newgrp docker
+git clone https://github.com/Flanderosky/Challenge_Alura_ISGC.git
+cd Challenge_Alura_ISGC
+cp .env.example .env   # agrega tus claves
+docker compose up -d --build
 ```
 
-5. **Subir el código**:
-
-```bash
-# Desde tu máquina local
-git clone https://github.com/tu-usuario/alura-agente.git
-# o
-scp -r -i ~/.oci/llave.pem ./alura-agente ubuntu@<IP_PUBLICA>:/home/ubuntu/
-```
-
-6. **Desplegar la aplicación**:
-
-```bash
-cd alura-agente
-cp .env.example .env
-nano .env  # Agrega tus claves de API
-docker-compose up -d --build
-```
-
-7. **Verificar**:
-
-```bash
-docker logs -f alura-agente
-```
-
-Accede desde el navegador a:
-
-```
-http://<IP_PUBLICA>:8501
-```
+5. **Verificar**: `docker logs -f alura-agente` y abrir `http://<IP_PUBLICA>:8000`.
 
 ---
 
-##  Ejemplos de preguntas que el agente puede responder
+## Preguntas de ejemplo
 
-### Con el CSV de ventas (`data/ventas_ejemplo.csv`)
+Con el PDF de políticas:
 
-- **Pregunta:** ¿Cuál fue el producto más vendido en diciembre de 2015?
-- **Pregunta:** ¿Cuántas unidades de `Mouse Inalámbrico` se vendieron en total?
-- **Pregunta:** ¿Qué región generó más ingresos?
+- ¿Cuántos días de vacaciones corresponden por año?
+- ¿Qué dice la política de trabajo remoto?
+- ¿Qué tecnologías se usan en el back-end?
 
-### Con el PDF de políticas (`data/politicas_ejemplo.pdf`)
+Con el CSV de ventas:
 
-- **Pregunta:** ¿Cuántos días de vacaciones corresponden a los colaboradores?
-- **Pregunta:** ¿Qué lenguajes y tecnologías se usan en la plataforma?
-- **Pregunta:** ¿Cuál es el horario de trabajo del equipo de tecnología?
+- ¿Cuál fue el total de ventas y el producto más vendido?
+- ¿Qué región generó más ingresos?
 
----
+El CSV se indexa por bloques de filas **y** con un fragmento de agregados (totales, promedios, máximos, valores más frecuentes). Sin ese fragmento, una búsqueda semántica no puede responder "¿cuál fue el total?", porque ninguna fila contiene el total.
 
-##  Ejemplos de respuestas generadas
-
-> **Pregunta:** ¿Cuál fue el producto más vendido en diciembre de 2015?
->
-> **Respuesta:** El producto más vendido en diciembre de 2015 fue la **Laptop Pro**, con un total de 160 unidades vendidas en las diferentes regiones.
-
-> **Pregunta:** ¿Qué tecnologías se usan en el back-end de la plataforma?
->
-> **Respuesta:** Según el documento, el back-end utiliza **Python**, la base de datos principal es **PostgreSQL** y se usa **Docker** para el despliegue de servicios.
-
-*(Las respuestas reales dependen del modelo de lenguaje configurado y del documento cargado.)*
+El chat conserva el contexto: después de preguntar por el total, "¿y cuál fue el promedio?" se resuelve sola.
 
 ---
 
-## 🧪 Pruebas
+## Pruebas
 
 ```bash
 pytest tests/
 ```
 
-> **Nota:** las pruebas del LLM requieren una clave de API configurada. Las pruebas de carga y vectorización funcionan sin conexión a APIs externas.
+Cubren carga, fragmentación con procedencia, relevancia normalizada, construcción del prompt y validación de configuración. No requieren clave de API.
 
 ---
 
-##  Evidencia del deploy en OCI
+## Notas
 
-La aplicación fue desplegada exitosamente en OCI Compute.
-
-- **URL pública:** *(agregar aquí la URL de tu instancia, ej. `http://<IP_PUBLICA>:8501`)*
-- **Captura de pantalla:** *(agregar aquí la imagen del agente funcionando en la nube)*
-
----
-
-##  Notas importantes
-
-- **Nunca subas tu archivo `.env` con claves reales** al repositorio; está incluido en `.gitignore`.
-- El proyecto usa un modelo de embeddings local, por lo que no requiere conexión a internet para indexar documentos.
-- El LLM sí requiere una clave de API de Google Gemini, Cohere u OpenAI.
-- Para OCI free tier, recomendamos Gemini porque tiene un tier gratuito generoso y la API es muy rápida.
+- **Nunca subas tu `.env`** con claves reales; está en `.gitignore`.
+- Los documentos subidos viven en `data/uploads/`, fuera del control de versiones.
+- El índice se reconstruye completo al agregar o quitar un documento. Para bibliotecas grandes conviene pasar a un índice persistente.
+- Los embeddings corren en local: indexar no requiere internet. El modelo de lenguaje sí.
 
 ---
 
-##  Licencia
+## Licencia
 
-Este proyecto es de uso educativo para el desafío final de Alura.
-
----
-
-##  Autor
-
-Desarrollado por **[Tu nombre]** como parte del desafío final **Alura Agente**.
+Uso educativo, desafío final de Alura.
