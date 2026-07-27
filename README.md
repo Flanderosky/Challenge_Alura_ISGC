@@ -105,44 +105,7 @@ Challenge_Alura_ISGC/
 
 ---
 
-## Cómo ejecutarlo
-
-```bash
-python -m venv venv
-source venv/bin/activate     # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-
-cp .env.example .env         # y edita tu clave de API
-uvicorn api.main:app --reload
-```
-
-Abre `http://localhost:8000`.
-
-La primera vez se descarga el modelo de embeddings (~90 MB). Mientras tanto la cabecera muestra el índice en estado *construyendo*.
-
-Para desarrollo (pruebas y utilidades): `pip install -r requirements-dev.txt`.
-
-### Variables de entorno
-
-```env
-LLM_PROVIDER=gemini
-GOOGLE_API_KEY=tu_google_api_key
-GOOGLE_MODEL=gemini-3.1-flash-lite
-```
-
-También acepta `cohere` (`COHERE_API_KEY`, `COHERE_MODEL`) y `openai` (`OPENAI_API_KEY`, `OPENAI_MODEL`).
-
-Dos variables más, ambas opcionales:
-
-| Variable | Efecto |
-|---|---|
-| `ALURA_ADMIN_TOKEN` | Si está definida, agregar y quitar documentos exige la cabecera `X-Alura-Token`. Consultar y leer siguen siendo públicos. Si está vacía, la escritura queda abierta, que es lo cómodo en local. |
-| `HOST_PORT` | Puerto del host donde se publica la aplicación con Docker. El contenedor siempre escucha en el 8000. |
-| `ALURA_LIMITE_DIARIO_IP` | Consultas al modelo por IP y día. Por defecto 5. `0` desactiva el límite. |
-| `ALURA_LIMITE_DIARIO_TOTAL` | Consultas al modelo por día sumando a todo el mundo. Por defecto 200. `0` desactiva el límite. |
-| `APP_UID` / `APP_GID` | Usuario con el que corre el contenedor. Debe coincidir con el dueño de `data/` en el host. Consúltalos con `id -u; id -g`. |
-
-### Por qué hay un límite de consultas
+## Por qué hay un límite de consultas
 
 La demo es pública y el modelo corre sobre la **cuota gratuita** de Google Gemini. Sin un tope, un bucle automatizado la agota en minutos y el agente deja de responder justo cuando alguien quiere probarlo. El límite no protege un gasto: protege la disponibilidad.
 
@@ -154,69 +117,9 @@ Tres detalles del diseño:
 
 ---
 
-## Docker
-
-```bash
-docker compose up --build
-```
-
-La imagen descarga el modelo de embeddings durante el build, así que el contenedor arranca listo. `HOST_PORT` en el `.env` cambia el puerto publicado sin tocar la imagen.
-
-Dos cosas que conviene saber antes de tocar el despliegue:
-
-- **Un solo worker, a propósito.** La biblioteca y el índice FAISS viven en la memoria del proceso. Con varios workers, cada uno tendría su copia: un documento subido a uno sería invisible para los demás.
-- **El volumen `./data` tapa el `data/` de la imagen.** El directorio del host debe contener los documentos de ejemplo, o la biblioteca arranca vacía. Un `git clone` ya los trae.
-- **Los uid tienen que coincidir.** El contenedor escribe en `./data`, que pertenece al usuario del host. Si no coinciden, subir un documento falla con permiso denegado. **No des por hecho que tu usuario es 1000**: en la instancia de OCI donde se desplegó esto, `ubuntu` resultó ser 1001:120. Comprueba con `id -u; id -g` y ponlos en `APP_UID` y `APP_GID`.
-
----
-
 ## Despliegue en OCI Compute
 
-1. **Instancia**: `VM.Standard.A1.Flex` (Ampere, aarch64) del free tier, Ubuntu 22.04 u Oracle Linux 8.
-
-   No uses `VM.Standard.E2.1.Micro`: con 1 GB de RAM no soporta ni el build ni la ejecución de torch con sentence-transformers. La A1 del free tier llega a 4 OCPU y 24 GB.
-
-2. **Puerto** abierto en la *Security List* del subnet: `Stateful`, `TCP`, origen `0.0.0.0/0`. En este despliegue se usa el **8501**, publicado hacia el 8000 del contenedor mediante `HOST_PORT`.
-
-   Abrir el puerto en la Security List no siempre basta: las imágenes de Ubuntu y Oracle Linux en OCI traen sus propias reglas de iptables. Un puerto publicado por Docker entra por `nat/PREROUTING`, no por `INPUT`, así que si otro contenedor ya se veía en ese puerto, este también se verá.
-
-3. **Docker** en la instancia:
-
-```bash
-# Ubuntu
-sudo apt-get update && sudo apt-get install -y docker.io docker-compose-v2
-# Oracle Linux
-sudo dnf install -y docker-engine docker-cli docker-compose-plugin && sudo systemctl enable --now docker
-
-sudo usermod -aG docker $USER && newgrp docker
-```
-
-4. **Código y configuración**:
-
-```bash
-git clone https://github.com/Flanderosky/Challenge_Alura_ISGC.git
-cd Challenge_Alura_ISGC
-cp .env.example .env && chmod 600 .env
-nano .env    # GOOGLE_API_KEY, HOST_PORT=8501, ALURA_ADMIN_TOKEN=$(openssl rand -hex 24)
-```
-
-5. **Build y arranque**. En 1 OCPU el build tarda entre 15 y 35 minutos, así que conviene lanzarlo dentro de `tmux` para que sobreviva a una caída de la sesión SSH:
-
-```bash
-tmux new -s build
-docker compose up -d --build
-```
-
-6. **Verificar**:
-
-```bash
-docker compose ps                                  # 0.0.0.0:8501->8000/tcp
-curl -s http://localhost:8501/api/state            # "status": "listo"
-curl -o /dev/null -w '%{http_code}\n' -X DELETE \
-     http://localhost:8501/api/documents/x         # 401: la escritura está protegida
-```
-
-Después, `http://<IP_PUBLICA>:8501` desde el navegador. El índice se construye al arrancar, así que durante el primer minuto la cabecera muestra *construyendo*.
+La aplicación corre en una instancia **OCI Compute `VM.Standard.A1.Flex`** (Ampere, aarch64, free tier — 4 OCPU / 24 GB, Ubuntu), publicada en el puerto **8501**.
 
 ---
 
@@ -291,13 +194,14 @@ Ninguna fila del CSV contiene esa suma: sale del fragmento de agregados que se c
 
 Este ejemplo está aquí a propósito. El agente responde solo con lo que hay en los documentos, y cuando no está, lo dice en vez de inventarlo.
 
-**[Ver los seis ejemplos completos](docs/ejemplos_respuestas.md)**, con todas las fuentes y los tiempos por etapa.
-
 ---
 
 ## Evidencia del despliegue
+<img width="910" height="910" alt="image" src="https://github.com/user-attachments/assets/083c5b73-b7a2-4839-83e7-7e26cd010949" />
 
-*(Pendiente: enlace público y capturas, tras el redespliegue en la instancia.)*
+<img width="999" height="138" alt="image" src="https://github.com/user-attachments/assets/c0d5a751-6563-4727-a94b-42435ff26e54" />
+
+
 
 ---
 
@@ -309,16 +213,6 @@ pytest tests/
 ```
 
 18 pruebas, ninguna requiere clave de API. Cubren carga y fragmentación con procedencia, los agregados y desgloses del CSV, la relevancia normalizada, la construcción del prompt y la protección de escritura de la API.
-
----
-
-## Notas
-
-- **Nunca subas tu `.env`** con claves reales; está en `.gitignore` y en `.dockerignore`, así que tampoco entra en la imagen.
-- Los documentos subidos viven en `data/uploads/`, fuera del control de versiones. El contenedor los escribe con el UID 1000, que es el del usuario por defecto en las instancias de OCI.
-- El índice se reconstruye completo al agregar o quitar un documento. Para bibliotecas grandes conviene pasar a un índice persistente.
-- Los embeddings corren en local: indexar no requiere internet. El modelo de lenguaje sí.
-- Mejora pendiente para ARM: sustituir torch por ONNX Runtime (`fastembed`) con el mismo modelo dejaría la imagen en una fracción de su tamaño y el build en unos minutos.
 
 ---
 
