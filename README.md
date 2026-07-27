@@ -219,3 +219,6 @@ pytest tests/
 ## Licencia
 
 Uso educativo, desafío final de Alura.
+
+<img width="300" height="300" alt="badge-rag-agente-ia" src="https://github.com/user-attachments/assets/e1c1ed4a-7747-44cb-bfc5-60dc2ddecbb7" />
+
